@@ -12,6 +12,11 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
+    app.UseSwaggerUI(c =>
+    {
+        c.DocumentTitle = "WMS API";
+        c.SwaggerEndpoint("/openapi/v1.json", "WMS API V1");
+    });
 }
 
 app.UseHttpsRedirection();
