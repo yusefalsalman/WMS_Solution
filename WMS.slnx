@@ -1,0 +1,5 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/WMS.API/WMS.API.csproj" />
+  </Folder>
+</Solution>
