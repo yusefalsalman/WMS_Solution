@@ -1,3 +1,5 @@
+using WMS.API.Exceptions;
+
 namespace WMS.API.Models.Entities;
 
 public class InventoryItem : BaseEntity
@@ -29,7 +31,7 @@ public class InventoryItem : BaseEntity
         }
         if (quantity > Quantity)
         {
-            throw new InvalidOperationException("Insufficient stock to remove the specified quantity.");
+            throw new InsufficientStockException(quantity, Quantity);
         }
         Quantity -= quantity;
         UpdatedAt = DateTime.UtcNow;
