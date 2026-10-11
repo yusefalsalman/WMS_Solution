@@ -6,6 +6,6 @@ public class Product : BaseEntity
 {
     public required string SKU { get; set; }
     public required string Name { get; set; }
-    public UnitOfMeasure UnitOfMeasure { get; set; }
-    public decimal LowStockThreshold { get; set; }
+    public required UnitOfMeasure UnitOfMeasure { get; set; }
+    public required decimal LowStockThreshold { get; set; }
 }
