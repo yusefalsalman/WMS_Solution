@@ -8,6 +8,16 @@ public class AuditLogConfiguration : IEntityTypeConfiguration<AuditLog>
 {
     public void Configure(EntityTypeBuilder<AuditLog> builder)
     {
+        builder.HasOne(a => a.Product)
+            .WithMany()
+            .HasForeignKey(a => a.ProductId)
+            .OnDelete(DeleteBehavior.Restrict);
+
+        builder.HasOne(a => a.Warehouse)
+            .WithMany()
+            .HasForeignKey(a => a.WarehouseId)
+            .OnDelete(DeleteBehavior.Restrict);
+
         builder.Property(a => a.Reason)
             .HasMaxLength(500);
 
