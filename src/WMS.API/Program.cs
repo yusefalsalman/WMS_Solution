@@ -20,7 +20,11 @@ if (app.Environment.IsDevelopment())
     {
         c.DocumentTitle = "WMS API";
         c.SwaggerEndpoint("/openapi/v1.json", "WMS API V1");
+
     });
+    using var scope = app.Services.CreateScope();
+    var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+    await DbSeeder.SeedAsync(db);
 }
 
 app.UseHttpsRedirection();
