@@ -2,19 +2,19 @@ using WMS.API.Models.Enums;
 
 namespace WMS.API.Models.DTOs;
 
-
-public record CreateStockTransferRequest(
-    Guid FromWarehouseId,
-    Guid ToWarehouseId,
-    Guid ProductId,
-    decimal Quantity
-);
-
 public record StockTransferResponse(
     Guid Id,
+    Guid ProductId,
     Guid FromWarehouseId,
     Guid ToWarehouseId,
-    Guid ProductId,
     decimal Quantity,
     TransferStatus Status
 );
+
+public record CreateStockTransferRequest(
+    Guid ProductId,
+    Guid FromWarehouseId,
+    Guid ToWarehouseId,
+    decimal Quantity
+);
+
