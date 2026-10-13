@@ -1,0 +1,90 @@
+using WMS.API.Interfaces;
+using WMS.API.Data;
+using WMS.API.Models.DTOs;
+using Microsoft.EntityFrameworkCore;
+using WMS.API.Models.Entities;
+namespace WMS.API.Services;
+
+
+public class WarehouseService : IWarehouseService
+{
+    private readonly AppDbContext _dbContext;
+
+    public WarehouseService(AppDbContext dbContext)
+    {
+        _dbContext = dbContext;
+    }
+
+    private static WarehouseResponse MapToWarehouseResponse(Warehouse warehouse)
+    {
+        return new WarehouseResponse(warehouse.Id, warehouse.Code, warehouse.Name, warehouse.Location, warehouse.IsActive);
+    }
+
+    public async Task<List<WarehouseResponse>> GetAllWarehousesAsync()
+    {
+        var warehouses = await _dbContext.Warehouses.AsNoTracking().ToListAsync();
+
+        return warehouses.Select(MapToWarehouseResponse).ToList();
+    }
+
+    public async Task<WarehouseResponse?> GetWarehouseByIdAsync(Guid warehouseId)
+    {
+        var warehouse = await _dbContext.Warehouses.FindAsync(warehouseId);
+
+        if (warehouse == null)
+        {
+            return null;
+        }
+
+        return MapToWarehouseResponse(warehouse);
+    }
+
+    public async Task<WarehouseResponse> CreateWarehouseAsync(CreateWarehouseRequest request)
+    {
+        var warehouse = new Warehouse
+        {
+            Code = request.Code,
+            Name = request.Name,
+            Location = request.Location,
+        };
+
+        _dbContext.Warehouses.Add(warehouse);
+        await _dbContext.SaveChangesAsync();
+
+        return MapToWarehouseResponse(warehouse);
+    }
+
+    public async Task<WarehouseResponse?> UpdateWarehouseAsync(Guid warehouseId, UpdateWarehouseRequest request)
+    {
+        var warehouse = await _dbContext.Warehouses.FindAsync(warehouseId);
+
+        if (warehouse == null)
+        {
+            return null;
+        }
+
+        warehouse.Name = request.Name;
+        warehouse.Location = request.Location;
+        warehouse.IsActive = request.IsActive;
+        warehouse.UpdatedAt = DateTime.UtcNow;
+
+        await _dbContext.SaveChangesAsync();
+
+        return MapToWarehouseResponse(warehouse);
+    }
+
+    public async Task<bool> DeleteWarehouseAsync(Guid warehouseId)
+    {
+        var warehouse = await _dbContext.Warehouses.FindAsync(warehouseId);
+
+        if (warehouse == null)
+        {
+            return false;
+        }
+
+        _dbContext.Warehouses.Remove(warehouse);
+        await _dbContext.SaveChangesAsync();
+
+        return true;
+    }
+}
