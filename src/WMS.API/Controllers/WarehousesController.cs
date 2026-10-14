@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using WMS.API.Interfaces;
 using WMS.API.Models.DTOs;
-
+using FluentValidation;
 namespace WMS.API.Controllers;
 
 [ApiController]
@@ -36,8 +36,14 @@ public class WarehousesController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<ActionResult<WarehouseResponse>> CreateWarehouse(CreateWarehouseRequest request)
+    public async Task<ActionResult<WarehouseResponse>> CreateWarehouse(CreateWarehouseRequest request, [FromServices] IValidator<CreateWarehouseRequest> validator)
     {
+        var validationResult = await validator.ValidateAsync(request);
+
+        if (!validationResult.IsValid)
+        {
+            return ValidationProblem(new ValidationProblemDetails(validationResult.ToDictionary()));
+        }
         var createdWarehouse = await _warehouseService.CreateWarehouseAsync(request);
         // 201 Created response 
         return CreatedAtAction(nameof(GetWarehouseById), new { id = createdWarehouse.Id }, createdWarehouse);
@@ -45,8 +51,14 @@ public class WarehousesController : ControllerBase
 
 
     [HttpPut("{id}")]
-    public async Task<ActionResult<WarehouseResponse>> UpdateWarehouse(Guid id, UpdateWarehouseRequest request)
+    public async Task<ActionResult<WarehouseResponse>> UpdateWarehouse(Guid id, UpdateWarehouseRequest request, [FromServices] IValidator<UpdateWarehouseRequest> validator)
     {
+        var validationResult = await validator.ValidateAsync(request);
+        if (!validationResult.IsValid)
+        {
+            return ValidationProblem(new ValidationProblemDetails(validationResult.ToDictionary()));
+        }
+
         var updatedWarehouse = await _warehouseService.UpdateWarehouseAsync(id, request);
         if (updatedWarehouse == null)
         {

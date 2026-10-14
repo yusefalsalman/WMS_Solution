@@ -1,3 +1,5 @@
+using System.ComponentModel.DataAnnotations;
+using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
 using WMS.API.Interfaces;
 using WMS.API.Models.DTOs;
@@ -34,15 +36,27 @@ public class ProductsController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<ActionResult<ProductResponse>> CreateProduct(CreateProductRequest request)
+    public async Task<ActionResult<ProductResponse>> CreateProduct(CreateProductRequest request, [FromServices] IValidator<CreateProductRequest> validator)
     {
+        var validationResult = await validator.ValidateAsync(request);
+
+        if (!validationResult.IsValid)
+        {
+            return ValidationProblem(new ValidationProblemDetails(validationResult.ToDictionary()));
+        }
         var createdProduct = await _productService.CreateProductAsync(request);
         return CreatedAtAction(nameof(GetProductById), new { id = createdProduct.Id }, createdProduct);
     }
 
     [HttpPut("{id}")]
-    public async Task<ActionResult<ProductResponse>> UpdateProduct(Guid id, UpdateProductRequest request)
+    public async Task<ActionResult<ProductResponse>> UpdateProduct(Guid id, UpdateProductRequest request, [FromServices] IValidator<UpdateProductRequest> validator)
     {
+        var validationResult = await validator.ValidateAsync(request);
+        if (!validationResult.IsValid)
+        {
+            return ValidationProblem(new ValidationProblemDetails(validationResult.ToDictionary()));
+        }
+
         var updatedProduct = await _productService.UpdateProductAsync(id, request);
         if (updatedProduct == null)
         {
