@@ -106,6 +106,9 @@ namespace WMS.API.Data.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("boolean");
+
                     b.Property<decimal>("LowStockThreshold")
                         .HasPrecision(18, 3)
                         .HasColumnType("numeric(18,3)");

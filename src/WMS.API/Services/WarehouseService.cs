@@ -20,11 +20,19 @@ public class WarehouseService : IWarehouseService
         return new WarehouseResponse(warehouse.Id, warehouse.Code, warehouse.Name, warehouse.Location, warehouse.IsActive);
     }
 
-    public async Task<List<WarehouseResponse>> GetAllWarehousesAsync()
+    public async Task<PagedResponse<WarehouseResponse>> GetAllWarehousesAsync(int page, int pageSize)
     {
-        var warehouses = await _dbContext.Warehouses.AsNoTracking().ToListAsync();
+        var query = _dbContext.Warehouses.AsNoTracking().Where(w => w.IsActive);
 
-        return warehouses.Select(MapToWarehouseResponse).ToList();
+        var total = await query.CountAsync();
+
+
+        var warehouses = await _dbContext.Warehouses
+        .OrderBy(w => w.Name)
+        .Skip((page - 1) * pageSize)
+        .Take(pageSize).ToListAsync();
+
+        return new PagedResponse<WarehouseResponse>(warehouses.Select(MapToWarehouseResponse).ToList(), page, pageSize, total);
     }
 
     public async Task<WarehouseResponse?> GetWarehouseByIdAsync(Guid warehouseId)
@@ -82,7 +90,11 @@ public class WarehouseService : IWarehouseService
             return false;
         }
 
-        _dbContext.Warehouses.Remove(warehouse);
+        // _dbContext.Warehouses.Remove(warehouse);
+
+        warehouse.IsActive = false;
+        warehouse.UpdatedAt = DateTime.UtcNow;
+
         await _dbContext.SaveChangesAsync();
 
         return true;

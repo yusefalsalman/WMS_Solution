@@ -9,7 +9,7 @@ public static class DbSeeder
     public static async Task SeedAsync(AppDbContext db)
     {
         // 0- check if the database is empty
-        if (await db.Warehouses.AnyAsync()) return;
+        if (await db.Warehouses.AnyAsync() || await db.Products.AnyAsync()) return;
 
         // 1- create some warehouses
         var amman = new Warehouse { Code = "AMM-01", Name = "Amman Main Warehouse", Location = "Amman" };

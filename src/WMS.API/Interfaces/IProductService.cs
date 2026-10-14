@@ -3,7 +3,7 @@ namespace WMS.API.Interfaces;
 
 public interface IProductService
 {
-    Task<List<ProductResponse>> GetAllProductsAsync();
+    Task<PagedResponse<ProductResponse>> GetAllProductsAsync(int page, int pageSize);
     Task<ProductResponse?> GetProductByIdAsync(Guid productId);
     Task<ProductResponse> CreateProductAsync(CreateProductRequest request);
     Task<ProductResponse?> UpdateProductAsync(Guid productId, UpdateProductRequest request);

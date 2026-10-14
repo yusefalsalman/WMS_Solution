@@ -18,9 +18,12 @@ public class ProductsController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<ActionResult<List<ProductResponse>>> GetAllProducts()
+    public async Task<ActionResult<PagedResponse<ProductResponse>>> GetAllProducts(int page = 1, int pageSize = 20)
     {
-        var products = await _productService.GetAllProductsAsync();
+        page = Math.Max(page, 1);
+        pageSize = Math.Clamp(pageSize, 1, 100);
+
+        var products = await _productService.GetAllProductsAsync(page, pageSize);
         return Ok(products);
     }
 

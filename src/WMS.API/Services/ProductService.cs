@@ -21,11 +21,19 @@ public class ProductService : IProductService
     }
 
 
-    public async Task<List<ProductResponse>> GetAllProductsAsync()
+    public async Task<PagedResponse<ProductResponse>> GetAllProductsAsync(int page, int pageSize)
     {
-        var products = await _dbContext.Products.AsNoTracking().ToListAsync();
+        var query = _dbContext.Products.AsNoTracking().Where(p => p.IsActive);
 
-        return products.Select(MapToProductResponse).ToList();
+        var total = await query.CountAsync();
+
+        var products = await query
+        .OrderBy(p => p.Name)
+        .Skip((page - 1) * pageSize)
+        .Take(pageSize)
+        .ToListAsync();
+
+        return new PagedResponse<ProductResponse>(products.Select(MapToProductResponse).ToList(), page, pageSize, total);
     }
     public async Task<ProductResponse?> GetProductByIdAsync(Guid productId)
     {
@@ -80,7 +88,13 @@ public class ProductService : IProductService
             return false;
         }
 
-        _dbContext.Products.Remove(product);
+        // _dbContext.Products.Remove(product);
+
+        // soft delete 
+        product.IsActive = false;
+        product.UpdatedAt = DateTime.UtcNow;
+
+
         await _dbContext.SaveChangesAsync();
 
         return true;

@@ -8,4 +8,5 @@ public class Product : BaseEntity
     public required string Name { get; set; }
     public required UnitOfMeasure UnitOfMeasure { get; set; }
     public required decimal LowStockThreshold { get; set; }
+    public bool IsActive { get; set; } = true;
 }

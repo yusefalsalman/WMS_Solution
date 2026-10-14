@@ -16,9 +16,12 @@ public class WarehousesController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<ActionResult<List<WarehouseResponse>>> GetAllWarehouses()
+    public async Task<ActionResult<PagedResponse<WarehouseResponse>>> GetAllWarehouses(int page = 1, int pageSize = 20)
     {
-        var warehouses = await _warehouseService.GetAllWarehousesAsync();
+        page = Math.Max(page, 1);
+        pageSize = Math.Clamp(pageSize, 1, 100);
+
+        var warehouses = await _warehouseService.GetAllWarehousesAsync(page, pageSize);
         return Ok(warehouses);
     }
 
