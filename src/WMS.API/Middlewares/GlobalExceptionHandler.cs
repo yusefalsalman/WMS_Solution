@@ -17,6 +17,7 @@ public class GlobalExceptionHandler(ILogger<GlobalExceptionHandler> logger) : IE
             DbUpdateException { InnerException: PostgresException { SqlState: "23503" } }
                 => (409, "This record is used by other records and cannot be deleted."),
             InsufficientStockException e => (409, e.Message),
+            NotFoundException e => (404, e.Message),
             DomainException e => (400, e.Message),
             ArgumentException e => (400, e.Message),
             _ => (500, "An unexpected error occurred.")

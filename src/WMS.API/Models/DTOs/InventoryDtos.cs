@@ -14,3 +14,10 @@ public record StockMovementRequest(
     decimal Quantity,
     string? Reason
 );
+
+public record AdjustStockRequest(
+    Guid ProductId,
+    Guid WarehouseId,
+    decimal NewQuantity,
+    string Reason
+);

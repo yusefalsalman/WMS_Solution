@@ -37,4 +37,15 @@ public class InventoryItem : BaseEntity
         UpdatedAt = DateTime.UtcNow;
     }
 
+    public void AdjustTo(decimal newQuantity)
+    {
+        if (newQuantity < 0)
+        {
+            throw new ArgumentException("Quantity must be greater than or equal zero.", nameof(newQuantity));
+        }
+
+        Quantity = newQuantity;
+        UpdatedAt = DateTime.UtcNow;
+    }
+
 }
