@@ -7,10 +7,12 @@ public class InventoryItem : BaseEntity
     public Guid ProductId { get; set; }
     public Guid WarehouseId { get; set; }
     public decimal Quantity { get; private set; }
+    public uint Version { get; private set; }
 
     // Navigation properties
     public Product Product { get; set; } = null!;
     public Warehouse Warehouse { get; set; } = null!;
+
 
 
     public void AddStock(decimal quantity)

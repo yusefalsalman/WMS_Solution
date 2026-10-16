@@ -12,10 +12,9 @@ public class GlobalExceptionHandler(ILogger<GlobalExceptionHandler> logger) : IE
     {
         var (status, title) = exception switch
         {
-            DbUpdateException { InnerException: PostgresException { SqlState: "23505" } }
-                => (409, "A record with the same unique value already exists."),
-            DbUpdateException { InnerException: PostgresException { SqlState: "23503" } }
-                => (409, "This record is used by other records and cannot be deleted."),
+            DbUpdateException { InnerException: PostgresException { SqlState: "23505" } } => (409, "A record with the same unique value already exists."),
+            DbUpdateException { InnerException: PostgresException { SqlState: "23503" } } => (409, "This record is used by other records and cannot be deleted."),
+            DbUpdateConcurrencyException => (409, "The stock was changed by another user. Please try again."),
             InsufficientStockException e => (409, e.Message),
             NotFoundException e => (404, e.Message),
             DomainException e => (400, e.Message),

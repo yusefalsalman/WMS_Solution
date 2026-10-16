@@ -12,5 +12,7 @@ public class InventoryItemConfiguration : IEntityTypeConfiguration<InventoryItem
 
         builder.Property(i => i.Quantity)
             .HasPrecision(18, 3);
+
+        builder.Property(i => i.Version).IsRowVersion();
     }
 }
