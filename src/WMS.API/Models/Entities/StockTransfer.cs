@@ -28,6 +28,11 @@ public class StockTransfer : BaseEntity
         Status = TransferStatus.Pending;
     }
 
+    public void Complete()
+    {
+        Status = TransferStatus.Completed;
+        UpdatedAt = DateTime.UtcNow;
+    }
     // Navigation properties
     public Product Product { get; set; } = null!;
     public Warehouse FromWarehouse { get; set; } = null!;

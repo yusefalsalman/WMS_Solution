@@ -7,7 +7,6 @@ using WMS.API.Exceptions;
 using WMS.API.Models.Enums;
 namespace WMS.API.Services;
 
-
 public class InventoryService : IInventoryService
 {
     private readonly AppDbContext _dbContext;

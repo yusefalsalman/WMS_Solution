@@ -17,6 +17,7 @@ builder.Services.AddDbContext<AppDbContext>(options => options.UseNpgsql(builder
 builder.Services.AddScoped<IProductService, ProductService>();
 builder.Services.AddScoped<IWarehouseService, WarehouseService>();
 builder.Services.AddScoped<IInventoryService, InventoryService>();
+builder.Services.AddScoped<IStockTransferService, StockTransferService>();
 
 
 builder.Services.AddValidatorsFromAssemblyContaining<Program>();
