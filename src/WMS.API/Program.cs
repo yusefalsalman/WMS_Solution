@@ -18,6 +18,8 @@ builder.Services.AddScoped<IProductService, ProductService>();
 builder.Services.AddScoped<IWarehouseService, WarehouseService>();
 builder.Services.AddScoped<IInventoryService, InventoryService>();
 builder.Services.AddScoped<IStockTransferService, StockTransferService>();
+builder.Services.AddScoped<IReportService, ReportService>();
+
 
 
 builder.Services.AddValidatorsFromAssemblyContaining<Program>();
