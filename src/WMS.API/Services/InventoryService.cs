@@ -16,7 +16,7 @@ public class InventoryService : IInventoryService
         _dbContext = dbContext;
     }
 
-    public async Task<InventoryItemResponse> StockInAsync(StockMovementRequest request)
+    public async Task<InventoryItemResponse> StockInAsync(StockMovementRequest request, Guid userId)
     {
         var product = await _dbContext.Products.FindAsync(request.ProductId);
         var warehouse = await _dbContext.Warehouses.FindAsync(request.WarehouseId);
@@ -41,7 +41,7 @@ public class InventoryService : IInventoryService
         item.AddStock(request.Quantity);
 
         // Create Audit Log
-        _dbContext.AuditLogs.Add(new AuditLog(request.ProductId, request.WarehouseId, MovementType.StockIn, request.Quantity, item.Quantity, request.Reason));
+        _dbContext.AuditLogs.Add(new AuditLog(request.ProductId, request.WarehouseId, userId, MovementType.StockIn, request.Quantity, item.Quantity, request.Reason));
 
         await _dbContext.SaveChangesAsync();
         return new InventoryItemResponse(
@@ -54,7 +54,7 @@ public class InventoryService : IInventoryService
         );
     }
 
-    public async Task<InventoryItemResponse> StockOutAsync(StockMovementRequest request)
+    public async Task<InventoryItemResponse> StockOutAsync(StockMovementRequest request, Guid userId)
     {
         var product = await _dbContext.Products.FindAsync(request.ProductId);
         var warehouse = await _dbContext.Warehouses.FindAsync(request.WarehouseId);
@@ -79,7 +79,7 @@ public class InventoryService : IInventoryService
         item.RemoveStock(request.Quantity);
 
         // Create Audit Log (negative change for stock out)
-        _dbContext.AuditLogs.Add(new AuditLog(request.ProductId, request.WarehouseId, MovementType.StockOut, -request.Quantity, item.Quantity, request.Reason));
+        _dbContext.AuditLogs.Add(new AuditLog(request.ProductId, request.WarehouseId, userId, MovementType.StockOut, -request.Quantity, item.Quantity, request.Reason));
 
         await _dbContext.SaveChangesAsync();
         return new InventoryItemResponse(
@@ -93,7 +93,7 @@ public class InventoryService : IInventoryService
     }
 
 
-    public async Task<InventoryItemResponse> AdjustStockAsync(AdjustStockRequest request)
+    public async Task<InventoryItemResponse> AdjustStockAsync(AdjustStockRequest request, Guid userId)
     {
         var product = await _dbContext.Products.FindAsync(request.ProductId);
         var warehouse = await _dbContext.Warehouses.FindAsync(request.WarehouseId);
@@ -121,7 +121,7 @@ public class InventoryService : IInventoryService
 
         item.AdjustTo(request.NewQuantity);
 
-        _dbContext.AuditLogs.Add(new AuditLog(request.ProductId, request.WarehouseId, MovementType.Adjustment, difference, item.Quantity, request.Reason));
+        _dbContext.AuditLogs.Add(new AuditLog(request.ProductId, request.WarehouseId, userId, MovementType.Adjustment, difference, item.Quantity, request.Reason));
 
         await _dbContext.SaveChangesAsync();
 

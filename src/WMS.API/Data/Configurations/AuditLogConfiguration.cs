@@ -18,6 +18,11 @@ public class AuditLogConfiguration : IEntityTypeConfiguration<AuditLog>
             .HasForeignKey(a => a.WarehouseId)
             .OnDelete(DeleteBehavior.Restrict);
 
+        builder.HasOne(a => a.User)
+            .WithMany()
+            .HasForeignKey(a => a.UserId)
+            .OnDelete(DeleteBehavior.Restrict);
+
         builder.Property(a => a.Reason)
             .HasMaxLength(500);
 

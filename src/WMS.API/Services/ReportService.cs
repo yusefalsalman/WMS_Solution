@@ -47,9 +47,9 @@ public class ReportService : IReportService
         JOIN "Products"   p ON p."Id" = i."ProductId"
         JOIN "Warehouses" w ON w."Id" = i."WarehouseId"
         WHERE i."Quantity" < p."LowStockThreshold"
-          AND p."IsActive" = TRUE
-          AND w."IsActive" = TRUE
-          AND (CAST(@WarehouseId AS uuid) IS NULL OR i."WarehouseId" = @WarehouseId)
+            AND p."IsActive" = TRUE
+            AND w."IsActive" = TRUE
+            AND (CAST(@WarehouseId AS uuid) IS NULL OR i."WarehouseId" = @WarehouseId)
         ORDER BY (i."Quantity" / NULLIF(p."LowStockThreshold", 0)), p."Name";
         """;
 
@@ -75,9 +75,9 @@ public class ReportService : IReportService
             JOIN "Products"   p ON p."Id" = a."ProductId"
             JOIN "Warehouses" w ON w."Id" = a."WarehouseId"
             WHERE (CAST(@ProductId   AS uuid)        IS NULL OR a."ProductId"   = @ProductId)
-              AND (CAST(@WarehouseId AS uuid)        IS NULL OR a."WarehouseId" = @WarehouseId)
-              AND (CAST(@From        AS timestamptz) IS NULL OR a."CreatedAt"  >= @From)
-              AND (CAST(@To          AS timestamptz) IS NULL OR a."CreatedAt"  <  @To)
+                AND (CAST(@WarehouseId AS uuid)        IS NULL OR a."WarehouseId" = @WarehouseId)
+                AND (CAST(@From        AS timestamptz) IS NULL OR a."CreatedAt"  >= @From)
+                AND (CAST(@To          AS timestamptz) IS NULL OR a."CreatedAt"  <  @To)
             ORDER BY a."CreatedAt" DESC
             LIMIT 500;
             """;

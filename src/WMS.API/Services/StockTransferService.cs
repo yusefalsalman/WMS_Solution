@@ -17,7 +17,7 @@ public class StockTransferService : IStockTransferService
         _dbContext = dbContext;
     }
 
-    public async Task<StockTransferResponse> CreateTransferAsync(CreateStockTransferRequest request)
+    public async Task<StockTransferResponse> CreateTransferAsync(CreateStockTransferRequest request, Guid userId)
     {
         var product = await _dbContext.Products.FindAsync(request.ProductId);
         var toWarehouse = await _dbContext.Warehouses.FindAsync(request.ToWarehouseId);
@@ -65,9 +65,9 @@ public class StockTransferService : IStockTransferService
         _dbContext.StockTransfers.Add(transfer);
 
         // 6. Two audit logs
-        _dbContext.AuditLogs.Add(new AuditLog(product.Id, fromWarehouse.Id, MovementType.TransferOut,
+        _dbContext.AuditLogs.Add(new AuditLog(product.Id, fromWarehouse.Id, userId, MovementType.TransferOut,
             -request.Quantity, sourceItem.Quantity, $"Transfer to {toWarehouse.Code}"));
-        _dbContext.AuditLogs.Add(new AuditLog(product.Id, toWarehouse.Id, MovementType.TransferIn,
+        _dbContext.AuditLogs.Add(new AuditLog(product.Id, toWarehouse.Id, userId, MovementType.TransferIn,
             request.Quantity, destItem.Quantity, $"Transfer from {fromWarehouse.Code}"));
 
         // 7. Save + commit

@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using WMS.API.Interfaces;
 using WMS.API.Models.DTOs;
@@ -6,6 +7,7 @@ namespace WMS.API.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
+[Authorize(Roles = "Manager,Admin")]
 public class ReportsController : ControllerBase
 {
     private readonly IReportService _reportService;
@@ -30,8 +32,7 @@ public class ReportsController : ControllerBase
     }
 
     [HttpGet("audit-log")]
-    public async Task<ActionResult<List<AuditLogEntry>>> GetAuditLog(
-        Guid? productId, Guid? warehouseId, DateTime? from, DateTime? to)
+    public async Task<ActionResult<List<AuditLogEntry>>> GetAuditLog(Guid? productId, Guid? warehouseId, DateTime? from, DateTime? to)
     {
         var result = await _reportService.GetAuditLogAsync(productId, warehouseId, from, to);
         return Ok(result);

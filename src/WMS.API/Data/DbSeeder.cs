@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using WMS.API.Models.Entities;
 using WMS.API.Models.Enums;
@@ -6,8 +7,17 @@ namespace WMS.API.Data;
 
 public static class DbSeeder
 {
-    public static async Task SeedAsync(AppDbContext db)
+    public static async Task SeedAsync(AppDbContext db, IPasswordHasher<User> hasher, string? adminPassword)
     {
+        // Users: separate check, so it runs even when products already exist
+        if (!await db.Users.AnyAsync() && !string.IsNullOrWhiteSpace(adminPassword))
+        {
+            var admin = new User { Username = "admin", Role = UserRole.Admin };
+            admin.PasswordHash = hasher.HashPassword(admin, adminPassword);
+            db.Users.Add(admin);
+            await db.SaveChangesAsync();
+        }
+
         // 0- check if the database is empty
         if (await db.Warehouses.AnyAsync() || await db.Products.AnyAsync()) return;
 

@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using FluentValidation;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using WMS.API.Interfaces;
 using WMS.API.Models.DTOs;
@@ -8,6 +9,7 @@ namespace WMS.API.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
+[Authorize]
 public class ProductsController : ControllerBase
 {
     private readonly IProductService _productService;
@@ -39,6 +41,7 @@ public class ProductsController : ControllerBase
     }
 
     [HttpPost]
+    [Authorize(Roles = "Manager,Admin")]
     public async Task<ActionResult<ProductResponse>> CreateProduct(CreateProductRequest request, [FromServices] IValidator<CreateProductRequest> validator)
     {
         var validationResult = await validator.ValidateAsync(request);
@@ -52,6 +55,7 @@ public class ProductsController : ControllerBase
     }
 
     [HttpPut("{id}")]
+    [Authorize(Roles = "Manager,Admin")]
     public async Task<ActionResult<ProductResponse>> UpdateProduct(Guid id, UpdateProductRequest request, [FromServices] IValidator<UpdateProductRequest> validator)
     {
         var validationResult = await validator.ValidateAsync(request);
@@ -69,6 +73,7 @@ public class ProductsController : ControllerBase
     }
 
     [HttpDelete("{id}")]
+    [Authorize(Roles = "Manager,Admin")]
     public async Task<IActionResult> DeleteProduct(Guid id)
     {
         var deleted = await _productService.DeleteProductAsync(id);

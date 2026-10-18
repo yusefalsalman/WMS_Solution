@@ -1,4 +1,6 @@
 using FluentValidation;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using WMS.API.Interfaces;
 using WMS.API.Models.DTOs;
@@ -7,6 +9,7 @@ namespace WMS.API.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
+[Authorize]
 public class TransfersController : ControllerBase
 {
     private readonly IStockTransferService _stockTransferService;
@@ -26,7 +29,12 @@ public class TransfersController : ControllerBase
             return ValidationProblem(new ValidationProblemDetails(validationResult.ToDictionary()));
         }
 
-        var result = await _stockTransferService.CreateTransferAsync(request);
+        var userIdValue = User.FindFirstValue("sub");
+
+        if (!Guid.TryParse(userIdValue, out var userId))
+            return Unauthorized();
+
+        var result = await _stockTransferService.CreateTransferAsync(request, userId);
         return Ok(result);
     }
 

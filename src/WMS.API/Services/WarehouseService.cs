@@ -27,10 +27,11 @@ public class WarehouseService : IWarehouseService
         var total = await query.CountAsync();
 
 
-        var warehouses = await _dbContext.Warehouses
-        .OrderBy(w => w.Name)
-        .Skip((page - 1) * pageSize)
-        .Take(pageSize).ToListAsync();
+        var warehouses = await query
+            .OrderBy(w => w.Name)
+            .Skip((page - 1) * pageSize)
+            .Take(pageSize)
+            .ToListAsync();
 
         return new PagedResponse<WarehouseResponse>(warehouses.Select(MapToWarehouseResponse).ToList(), page, pageSize, total);
     }

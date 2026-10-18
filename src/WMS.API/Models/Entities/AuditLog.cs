@@ -6,6 +6,7 @@ namespace WMS.API.Models.Entities;
 public class AuditLog : BaseEntity
 {
     public Guid ProductId { get; private set; }
+    public Guid? UserId { get; private set; }
     public Guid WarehouseId { get; private set; }
     public MovementType MovementType { get; private set; }
     public decimal QuantityChanged { get; private set; }
@@ -15,11 +16,13 @@ public class AuditLog : BaseEntity
     // Navigation properties
     public Product Product { get; set; } = null!;
     public Warehouse Warehouse { get; set; } = null!;
+    public User? User { get; set; } = null!;
 
-    public AuditLog(Guid productId, Guid warehouseId, MovementType movementType, decimal quantityChanged, decimal quantityAfter, string? reason = null)
+    public AuditLog(Guid productId, Guid warehouseId, Guid? userId, MovementType movementType, decimal quantityChanged, decimal quantityAfter, string? reason = null)
     {
         ProductId = productId;
         WarehouseId = warehouseId;
+        UserId = userId;
         MovementType = movementType;
         if (quantityChanged == 0)
         {

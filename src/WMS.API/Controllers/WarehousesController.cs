@@ -2,10 +2,12 @@ using Microsoft.AspNetCore.Mvc;
 using WMS.API.Interfaces;
 using WMS.API.Models.DTOs;
 using FluentValidation;
+using Microsoft.AspNetCore.Authorization;
 namespace WMS.API.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
+[Authorize]
 public class WarehousesController : ControllerBase
 {
     private readonly IWarehouseService _warehouseService;
@@ -39,6 +41,7 @@ public class WarehousesController : ControllerBase
     }
 
     [HttpPost]
+    [Authorize(Roles = "Manager,Admin")]
     public async Task<ActionResult<WarehouseResponse>> CreateWarehouse(CreateWarehouseRequest request, [FromServices] IValidator<CreateWarehouseRequest> validator)
     {
         var validationResult = await validator.ValidateAsync(request);
@@ -54,6 +57,7 @@ public class WarehousesController : ControllerBase
 
 
     [HttpPut("{id}")]
+    [Authorize(Roles = "Manager,Admin")]
     public async Task<ActionResult<WarehouseResponse>> UpdateWarehouse(Guid id, UpdateWarehouseRequest request, [FromServices] IValidator<UpdateWarehouseRequest> validator)
     {
         var validationResult = await validator.ValidateAsync(request);
@@ -71,6 +75,7 @@ public class WarehousesController : ControllerBase
     }
 
     [HttpDelete("{id}")]
+    [Authorize(Roles = "Manager,Admin")]
     public async Task<IActionResult> DeleteWarehouse(Guid id)
     {
         var deleted = await _warehouseService.DeleteWarehouseAsync(id);

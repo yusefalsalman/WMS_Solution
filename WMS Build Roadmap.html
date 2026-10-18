@@ -1,0 +1,288 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>WMS Build Roadmap</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: one reading column, a "next step" ticket on top, then phases as aisle cards with collapsible task lists */
+:root{
+  --bg:#f3f5f8; --surface:#ffffff; --ink:#152033; --muted:#5b6678; --line:#d9dee7;
+  --accent:#e0a100; --accent-ink:#5a4100; --accent-soft:#fff4d6;
+  --done:#1f8a55; --done-soft:#e3f4ea; --doing:#2563c9; --doing-soft:#e3ecfb; --todo:#8a93a3;
+  --f-body:"IBM Plex Sans Arabic",Tahoma,"Segoe UI",sans-serif;
+  --f-mono:"JetBrains Mono",ui-monospace,Consolas,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#0f141c; --surface:#171e29; --ink:#e7ecf3; --muted:#9aa5b6; --line:#2a3443;
+  --accent:#f2b72c; --accent-ink:#ffe3a1; --accent-soft:#33280d;
+  --done:#46c483; --done-soft:#15301f; --doing:#6ea0ff; --doing-soft:#172640; --todo:#6c7686; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0f141c; --surface:#171e29; --ink:#e7ecf3; --muted:#9aa5b6; --line:#2a3443;
+  --accent:#f2b72c; --accent-ink:#ffe3a1; --accent-soft:#33280d;
+  --done:#46c483; --done-soft:#15301f; --doing:#6ea0ff; --doing-soft:#172640; --todo:#6c7686; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:16px;line-height:1.7;padding:32px 16px 64px}
+.wrap{max-width:820px;margin:0 auto;display:flex;flex-direction:column;gap:24px}
+code,.mono{font-family:var(--f-mono);font-size:.86em;direction:ltr;unicode-bidi:isolate}
+header h1{margin:0;font-size:1.9rem;line-height:1.25;text-wrap:balance;font-weight:700}
+header p{margin:4px 0 0;color:var(--muted)}
+.meter{display:flex;flex-direction:column;gap:8px}
+.meter-top{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;font-size:.92rem;color:var(--muted);font-variant-numeric:tabular-nums}
+.meter-top b{color:var(--ink)}
+.bar{height:10px;background:var(--line);border-radius:999px;overflow:hidden}
+.bar i{display:block;height:100%;background:var(--done);border-radius:999px}
+.ticket{background:var(--accent-soft);border:1.5px dashed var(--accent);border-radius:10px;padding:18px 20px;display:flex;flex-direction:column;gap:6px}
+.ticket .lbl{font-family:var(--f-mono);font-size:.75rem;letter-spacing:.12em;color:var(--accent-ink);text-transform:uppercase;direction:ltr;text-align:right}
+.ticket h2{margin:0;font-size:1.15rem;color:var(--accent-ink)}
+.ticket ol{margin:0;padding-inline-start:22px;color:var(--ink)}
+.legend{display:flex;gap:16px;flex-wrap:wrap;font-size:.85rem;color:var(--muted)}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+.dot{width:10px;height:10px;border-radius:50%;display:inline-block}
+.phases{display:flex;flex-direction:column;gap:12px}
+details.phase{background:var(--surface);border:1px solid var(--line);border-radius:10px}
+details.phase[data-s="doing"]{border-color:var(--doing)}
+summary{list-style:none;cursor:pointer;padding:14px 18px;display:grid;grid-template-columns:auto 1fr auto;gap:14px;align-items:center}
+summary::-webkit-details-marker{display:none}
+summary:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:10px}
+.code{font-family:var(--f-mono);font-weight:600;font-size:.8rem;padding:4px 8px;border-radius:6px;background:var(--bg);border:1px solid var(--line);direction:ltr}
+.ttl{min-width:0}
+.ttl strong{display:block;font-size:1.02rem;line-height:1.4}
+.ttl small{color:var(--muted);font-size:.85rem}
+.pill{font-size:.78rem;padding:3px 10px;border-radius:999px;white-space:nowrap;font-variant-numeric:tabular-nums}
+.pill.done{background:var(--done-soft);color:var(--done)}
+.pill.doing{background:var(--doing-soft);color:var(--doing)}
+.pill.todo{background:var(--bg);color:var(--todo);border:1px solid var(--line)}
+.body{padding:0 18px 16px;display:flex;flex-direction:column;gap:10px}
+.learn{font-size:.9rem;color:var(--muted);border-top:1px solid var(--line);padding-top:10px}
+ul.tasks{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:6px}
+ul.tasks li{display:grid;grid-template-columns:20px 1fr;gap:10px;align-items:start}
+.box{width:18px;height:18px;border-radius:5px;border:1.5px solid var(--todo);margin-top:4px;display:grid;place-items:center;font-size:12px;line-height:1}
+li.done .box{background:var(--done);border-color:var(--done);color:var(--surface)}
+li.done .txt{color:var(--muted);text-decoration:line-through;text-decoration-color:var(--line)}
+li.doing .box{border-color:var(--doing);background:var(--doing-soft)}
+.txt{min-width:0}
+footer{color:var(--muted);font-size:.85rem;text-align:center}
+@media (max-width:520px){summary{grid-template-columns:auto 1fr;}.pill{grid-column:2;justify-self:start}}
+@media (prefers-reduced-motion:no-preference){.bar i{transition:width .6s ease}}
+</style>
+
+<div class="wrap" dir="rtl" lang="ar">
+  <header>
+    <h1>خطة بناء نظام إدارة المخازن (WMS)</h1>
+    <p>ASP.NET Core Web API على .NET 10 بطبقات، مع PostgreSQL و EF Core و Dapper، وواجهة React + TypeScript.</p>
+  </header>
+
+  <section class="meter" aria-label="التقدم">
+    <div class="meter-top"><span>التقدّم الكلي</span><span id="meterText"></span></div>
+    <div class="bar"><i id="meterBar" style="width:0"></i></div>
+  </section>
+
+  <section class="ticket" aria-label="الخطوة الجاية">
+    <span class="lbl">Next step</span>
+    <h2 id="nextTitle"></h2>
+    <ol id="nextList"></ol>
+  </section>
+
+  <div class="legend">
+    <span><i class="dot" style="background:var(--done)"></i>خلص</span>
+    <span><i class="dot" style="background:var(--doing)"></i>شغّالين فيه</span>
+    <span><i class="dot" style="background:var(--todo)"></i>لسا</span>
+  </div>
+
+  <div class="phases" id="phases"></div>
+
+  <footer>آخر تحديث: 19 أكتوبر 2026</footer>
+</div>
+
+<script>
+const NEXT = {
+  title: "المرحلة 10: Background Job للمخزون المنخفض",
+  steps: [
+    "إنشاء خدمة دورية تفحص المنتجات التي وصلت إلى حد المخزون المنخفض.",
+    "تحديد طريقة حفظ التنبيهات أو اقتراحات إعادة التوريد.",
+    "إضافة endpoint لعرض التنبيهات."
+  ]
+};
+
+const PHASES = [
+ {code:"P00", t:"تجهيز المشروع", sub:"Solution و Web API وفولدرات و Git",
+  learn:"Solution مقابل Project، أوامر dotnet، قسمي Program.cs (تسجيل الخدمات و الـ Pipeline)، top-level statements، قراءة الـ errors، أساسيات Git.",
+  tasks:[
+   ["done","فهم الفرق بين Clean Architecture و Layered، واختيار Layered"],
+   ["done","إنشاء <code>WMS.slnx</code> ومشروع <code>WMS.API</code> بـ Controllers داخل <code>src/</code>"],
+   ["done","إنشاء الفولدرات: Controllers و Services و Interfaces و Data و Models/Entities و Models/DTOs"],
+   ["done","تنظيف WeatherForecast وإضافة <code>AddControllers</code> و <code>MapControllers</code>"],
+   ["done","تشغيل المشروع وفتح <code>/openapi/v1.json</code>"],
+   ["done","<code>git init</code> و <code>.gitignore</code> وأول commit"],
+   ["done","commit لملفي <code>WMS.slnx</code> و <code>.gitignore</code> ورفع المشروع على GitHub"]
+  ]},
+ {code:"P01", t:"تصميم الـ Entities", sub:"Product و Warehouse و InventoryItem و StockTransfer و AuditLog",
+  learn:"تصميم الكلاسات، Encapsulation (private set وميثودز بدل التعديل المباشر)، Enums، Exceptions مخصصة، قواعد البزنس جوا الـ Entity.",
+  tasks:[
+   ["done","<code>BaseEntity</code>: Id و CreatedAt و UpdatedAt"],
+   ["done","<code>Product</code>: SKU فريد، اسم، وحدة قياس، حد أدنى للمخزون (Low Stock Threshold)"],
+   ["done","<code>UnitOfMeasure</code> enum بأرقام صريحة"],
+   ["done","<code>Warehouse</code>: كود، اسم، موقع، فعّال أو لا"],
+   ["done","<code>InventoryItem</code>: رصيد منتج بمستودع، مع Navigation Properties"],
+   ["done","ميثودز <code>AddStock</code> و <code>RemoveStock</code> بتمنع الرصيد السالب (Encapsulation)"],
+   ["done","<code>StockTransfer</code>: من مستودع لمستودع، كمية، حالة، مع constructor بيفحص القواعد"],
+   ["done","enum <code>TransferStatus</code>"],
+   ["done","<code>AuditLog</code> + enum <code>MovementType</code>: شو صار للمخزون ومتى"],
+   ["done","Exceptions: <code>DomainException</code> و <code>InsufficientStockException</code>"]
+  ]},
+ {code:"P02", t:"قاعدة البيانات و EF Core", sub:"PostgreSQL و DbContext و Migrations",
+  learn:"ORM، DbContext و DbSet، Fluent API، العلاقات (1-to-many)، Indexes و Unique constraints، Migrations، Seeding، الـ Connection String و User Secrets.",
+  tasks:[
+   ["done","مشروع على Neon مع branch للتطوير (dev) و branch للـ production"],
+   ["done","تنزيل packages: Npgsql provider و EF Core Design و أداة <code>dotnet-ef</code>"],
+   ["done","<code>AppDbContext</code> بفولدر Data وتسجيله بالـ DI"],
+   ["done","Configurations منفصلة لكل Entity (<code>IEntityTypeConfiguration</code>)"],
+   ["done","Unique index على SKU و Warehouse Code و (WarehouseId, ProductId)"],
+   ["done","Connection String بـ User Secrets (برّا الـ repo)"],
+   ["done","أول Migration وتطبيقها، وفحص الجداول بالداتابيز"],
+   ["done","Migration تانية: <code>Restrict</code> بدل <code>Cascade</code> على AuditLog"],
+   ["done","Seed data: مستودعين وكم منتج للتجربة (<code>DbSeeder</code>)"]
+  ]},
+ {code:"P03", t:"أول CRUD كامل", sub:"Products و Warehouses من الـ Controller للداتابيز",
+  learn:"DTOs و Mapping، Interfaces و Dependency Injection، أعمار الخدمات (Scoped و Transient و Singleton)، async/await، REST و HTTP status codes.",
+  tasks:[
+   ["done","DTOs لكل الـ Entities (Request و Response)"],
+   ["done","<code>IProductService</code> و <code>ProductService</code> وتسجيلهم بالـ DI"],
+   ["done","<code>ProductsController</code>: GET و GET by id و POST و PUT و DELETE"],
+   ["done","نفس الإشي لـ Warehouses"],
+   ["done","الـ enums بترجع كنص بالـ JSON"],
+   ["done","واجهة لتجربة الـ API: Swagger UI على <code>/swagger</code>"],
+   ["done","Pagination على القوائم (<code>PagedResponse&lt;T&gt;</code>)"],
+   ["done","Soft delete بدل الحذف النهائي"]
+  ]},
+ {code:"P04", t:"Validation ومعالجة الأخطاء", sub:"FluentValidation و Global Exception Handling",
+  learn:"FluentValidation، Middleware و <code>IExceptionHandler</code>، ProblemDetails، Logging بـ ILogger.",
+  tasks:[
+   ["done","Validators لـ Product و Warehouse (Create و Update)"],
+   ["done","Global Exception Handler بيحوّل الـ exceptions لردود موحّدة (ProblemDetails)"],
+   ["done","SKU أو Code مكرر ← 409، و <code>InsufficientStockException</code> ← 409"],
+   ["done","Logging للأخطاء غير المتوقعة بـ ILogger"]
+  ]},
+ {code:"P05", t:"حركة المخزون", sub:"استلام وصرف وتعديل رصيد مع سجل تدقيق",
+  learn:"منطق البزنس بالـ Services، كتابة AuditLog لكل حركة، الـ Change Tracker بـ EF.",
+  tasks:[
+   ["done","Endpoint لاستلام بضاعة (Stock In)"],
+   ["done","Endpoint لصرف بضاعة (Stock Out) مع منع السالب"],
+   ["done","Endpoint لتعديل الجرد (Adjustment) مع سبب"],
+   ["done","تسجيل كل حركة بـ AuditLog تلقائياً"],
+   ["done","عرض رصيد منتج بكل المستودعات"]
+  ]},
+ {code:"P06", t:"نقل المخزون بـ ACID Transaction", sub:"خصم وإضافة وتسجيل، أو Rollback كامل",
+  learn:"ACID، Transactions الصريحة (<code>BeginTransactionAsync</code> و Commit و Rollback)، Unit of Work.",
+  tasks:[
+   ["done","<code>IStockTransferService</code> و <code>StockTransferService</code>"],
+   ["done","خصم من المستودع أ، إضافة للمستودع ب، إنشاء سجل نقل، بنفس الـ Transaction"],
+   ["done","Rollback لو فشلت أي خطوة، وتجربة الفشل عن قصد"],
+   ["done","منع النقل لنفس المستودع"],
+   ["done","<code>TransfersController</code> وسجل التحويلات"]
+  ]},
+ {code:"P07", t:"التزامن (Concurrency)", sub:"موظفين بينقلوا نفس القطعة بنفس اللحظة",
+  learn:"Race conditions، Optimistic concurrency (عمود <code>xmin</code> بـ PostgreSQL)، Pessimistic locking (<code>SELECT ... FOR UPDATE</code>)، <code>DbUpdateConcurrencyException</code>.",
+  tasks:[
+   ["done","إعادة إنتاج المشكلة: طلبين متوازيين بيخلّوا الرصيد غلط"],
+   ["done","Optimistic concurrency على <code>InventoryItem</code>"],
+   ["done","معالجة الـ conflict ورد 409 أو إعادة المحاولة"],
+   ["done","Pessimistic lock بعملية النقل والمقارنة بين الطريقتين"]
+  ]},
+ {code:"P08", t:"تقارير سريعة بـ Dapper", sub:"جرد، بحث، وسجل تدقيق",
+  learn:"Dapper، كتابة SQL يدوي، Parameters ومنع SQL Injection، متى EF ومتى Dapper.",
+  tasks:[
+   ["done","تنزيل Dapper واستخدام نفس الـ connection"],
+   ["done","تقرير جرد لكل مستودع (مجاميع و GROUP BY)"],
+   ["done","بحث سريع عن المنتجات تحت الحد الأدنى"],
+   ["done","استعلام سجل التدقيق مع فلترة بالتاريخ والمستخدم"]
+  ]},
+ {code:"P09", t:"تسجيل الدخول والصلاحيات", sub:"JWT و Roles",
+  learn:"Authentication مقابل Authorization، تشفير كلمات السر (Hashing)، JWT (Claims و Signing و Expiry)، Role-based Authorization.",
+  tasks:[
+   ["done","Entity لـ <code>User</code> و enum <code>UserRole</code> (Admin و Manager و Clerk)"],
+   ["done","Register و Login مع Password Hashing"],
+   ["done","إصدار JWT والتحقق منه بالـ middleware"],
+   ["done","<code>[Authorize]</code> وصلاحيات حسب الدور على الـ endpoints"],
+   ["done","ربط AuditLog بالمستخدم الحالي من التوكن"]
+  ]},
+ {code:"P10", t:"Background Job للمخزون المنخفض", sub:"فحص دوري وتوليد تنبيهات",
+  learn:"<code>BackgroundService</code> و <code>IHostedService</code>، الـ Scopes داخل خدمة Singleton، Quartz.NET (اختياري).",
+  tasks:[
+   ["todo","خدمة بتشتغل كل فترة وبتفحص المنتجات تحت الحد الأدنى"],
+   ["todo","جدول تنبيهات أو اقتراحات إعادة توريد"],
+   ["todo","Endpoint لعرض التنبيهات"]
+  ]},
+ {code:"P11", t:"Unit Tests", sub:"xUnit و Moq",
+  learn:"كتابة اختبارات، Arrange-Act-Assert، Mocking، ليش منطق البزنس المعزول سهل تختبره.",
+  tasks:[
+   ["todo","مشروع <code>WMS.UnitTests</code> داخل <code>tests/</code> وإضافته للـ solution"],
+   ["todo","اختبارات قواعد الـ Entities (رصيد سالب، نقل لنفس المستودع)"],
+   ["todo","اختبارات <code>StockTransferService</code> مع Mocks"],
+   ["todo","تشغيل كل الاختبارات بـ <code>dotnet test</code>"]
+  ]},
+ {code:"P12", t:"تجهيز الفرونت اند", sub:"Vite و React و TypeScript و Tailwind",
+  learn:"هيكل مشروع React، TypeScript types مطابقة للـ DTOs، Axios instance و Interceptors، CORS، متغيرات البيئة.",
+  tasks:[
+   ["todo","مشروع Vite + React + TS بفولدر <code>client/</code>"],
+   ["todo","Tailwind CSS"],
+   ["todo","Axios instance مع Interceptor بيضيف الـ JWT"],
+   ["todo","تفعيل CORS بالـ backend"],
+   ["todo","React Router وصفحات محمية"]
+  ]},
+ {code:"P13", t:"شاشات الفرونت اند", sub:"تسجيل دخول، جداول، نقل، تقارير",
+  learn:"TanStack Table (Pagination و Filtering و Sorting)، Forms، إدارة الحالة وجلب البيانات، معالجة الأخطاء بالواجهة.",
+  tasks:[
+   ["todo","صفحة Login"],
+   ["todo","جدول المنتجات والمستودعات (TanStack Table)"],
+   ["todo","شاشة المخزون لكل مستودع"],
+   ["todo","فورم نقل بضاعة مع رسائل خطأ واضحة"],
+   ["todo","Dashboard: تقارير وتنبيهات المخزون المنخفض"]
+  ]},
+ {code:"P14", t:"النشر (Deployment)", sub:"Neon و Docker واستضافة الباك والفرونت",
+  learn:"Dockerfile، متغيرات البيئة بالـ production، Migrations على السيرفر، CORS للدومين الحقيقي.",
+  tasks:[
+   ["todo","قاعدة بيانات على Neon"],
+   ["todo","Dockerfile للـ API"],
+   ["todo","نشر الـ API (Render أو Railway أو Azure)"],
+   ["todo","نشر الفرونت اند (Vercel أو Netlify)"],
+   ["todo","فحص النظام كامل أونلاين"]
+  ]},
+ {code:"P15", t:"التشطيب والـ Portfolio", sub:"README وصور وشرح",
+  learn:"توثيق المشروع، كيف تحكي عنه بالمقابلة.",
+  tasks:[
+   ["todo","README فيه الفكرة والتقنيات وطريقة التشغيل وصور"],
+   ["todo","ملف <code>.http</code> فيه أمثلة لكل الـ endpoints"],
+   ["todo","سطر المشروع بالـ CV وتجهيز شرحه للمقابلات"]
+  ]}
+];
+
+const label = {done:"خلص", doing:"شغّالين فيه", todo:"لسا"};
+function phaseState(tasks){
+  if (tasks.every(t=>t[0]==="done")) return "done";
+  if (tasks.some(t=>t[0]!=="todo")) return "doing";
+  return "todo";
+}
+const all = PHASES.flatMap(p=>p.tasks);
+const doneN = all.filter(t=>t[0]==="done").length;
+const pct = Math.round(doneN/all.length*100);
+document.getElementById("meterText").innerHTML = `<b>${doneN}</b> من ${all.length} مهمة · ${pct}%`;
+requestAnimationFrame(()=>{document.getElementById("meterBar").style.width = pct+"%";});
+
+document.getElementById("nextTitle").textContent = NEXT.title;
+document.getElementById("nextList").innerHTML = NEXT.steps.map(s=>`<li>${s}</li>`).join("");
+
+document.getElementById("phases").innerHTML = PHASES.map(p=>{
+  const s = phaseState(p.tasks);
+  const d = p.tasks.filter(t=>t[0]==="done").length;
+  const pill = s==="todo" ? label.todo : `${label[s]} · ${d}/${p.tasks.length}`;
+  return `<details class="phase" data-s="${s}" ${s==="doing"?"open":""}>
+    <summary><span class="code">${p.code}</span><span class="ttl"><strong>${p.t}</strong><small>${p.sub}</small></span><span class="pill ${s}">${pill}</span></summary>
+    <div class="body">
+      <ul class="tasks">${p.tasks.map(([st,txt])=>`<li class="${st}"><span class="box" aria-label="${label[st]}">${st==="done"?"✓":""}</span><span class="txt">${txt}</span></li>`).join("")}</ul>
+      <div class="learn"><b>رح تتعلّم:</b> ${p.learn}</div>
+    </div>
+  </details>`;
+}).join("");
+</script>
+
+</body></html>
