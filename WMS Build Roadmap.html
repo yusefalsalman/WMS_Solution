@@ -95,11 +95,11 @@ footer{color:var(--muted);font-size:.85rem;text-align:center}
 
 <script>
 const NEXT = {
-  title: "المرحلة 10: Background Job للمخزون المنخفض",
+  title: "المرحلة 11: Unit Tests",
   steps: [
-    "إنشاء خدمة دورية تفحص المنتجات التي وصلت إلى حد المخزون المنخفض.",
-    "تحديد طريقة حفظ التنبيهات أو اقتراحات إعادة التوريد.",
-    "إضافة endpoint لعرض التنبيهات."
+    "إنشاء مشروع اختبارات باستخدام xUnit.",
+    "كتابة أول Unit Test وفهم Arrange و Act و Assert.",
+    "البدء باختبار قواعد الـ Entities ثم خدمات المخزون والنقل."
   ]
 };
 
@@ -206,11 +206,11 @@ const PHASES = [
    ["done","ربط AuditLog بالمستخدم الحالي من التوكن"]
   ]},
  {code:"P10", t:"Background Job للمخزون المنخفض", sub:"فحص دوري وتوليد تنبيهات",
-  learn:"<code>BackgroundService</code> و <code>IHostedService</code>، الـ Scopes داخل خدمة Singleton، Quartz.NET (اختياري).",
+  learn:"استخدمنا <code>BackgroundService</code> (المبني على <code>IHostedService</code>) و Scope لكل دورة داخل الـ Hosted Service للتعامل مع الخدمات المسجّلة كـ Scoped. <code>Quartz.NET</code> اختياري ولم نستخدمه.",
   tasks:[
-   ["todo","خدمة بتشتغل كل فترة وبتفحص المنتجات تحت الحد الأدنى"],
-   ["todo","جدول تنبيهات أو اقتراحات إعادة توريد"],
-   ["todo","Endpoint لعرض التنبيهات"]
+   ["done","خدمة بتشتغل كل فترة وبتفحص المنتجات تحت الحد الأدنى"],
+   ["done","جدول تنبيهات أو اقتراحات إعادة توريد"],
+   ["done","Endpoint لعرض التنبيهات"]
   ]},
  {code:"P11", t:"Unit Tests", sub:"xUnit و Moq",
   learn:"كتابة اختبارات، Arrange-Act-Assert، Mocking، ليش منطق البزنس المعزول سهل تختبره.",

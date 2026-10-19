@@ -12,6 +12,8 @@ public class AppDbContext : DbContext
     public DbSet<InventoryItem> InventoryItems { get; set; } = null!;
     public DbSet<AuditLog> AuditLogs { get; set; } = null!;
     public DbSet<StockTransfer> StockTransfers { get; set; } = null!;
+    public DbSet<LowStockAlert> LowStockAlerts { get; set; } = null!;
+
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
