@@ -58,9 +58,9 @@ builder.Services.AddProblemDetails();
 // Background Service
 builder.Services.AddHostedService<LowStockAlertBackgroundService>();
 
+// Auth Service
 builder.Services
-    .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-    .AddJwtBearer(options =>
+    .AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
     {
         options.MapInboundClaims = false;
         options.TokenValidationParameters = new TokenValidationParameters
@@ -80,7 +80,19 @@ builder.Services
 
 builder.Services.AddAuthorization();
 
+// CORS Service
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("Frontend", policy =>
+    {
+        policy.WithOrigins("http://localhost:5173")
+            .AllowAnyHeader()
+            .AllowAnyMethod();
+    });
+});
 
+
+// Build the app
 var app = builder.Build();
 app.UseExceptionHandler();
 
@@ -100,6 +112,7 @@ if (app.Environment.IsDevelopment())
     await DbSeeder.SeedAsync(db, hasher, builder.Configuration["SeedAdmin:Password"]);
 }
 
+app.UseCors("Frontend");
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();

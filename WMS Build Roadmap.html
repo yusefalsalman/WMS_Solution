@@ -95,11 +95,11 @@ footer{color:var(--muted);font-size:.85rem;text-align:center}
 
 <script>
 const NEXT = {
-  title: "المرحلة 12: تجهيز الفرونت اند",
+  title: "تكملة المرحلة 12: JWT Interceptor",
   steps: [
-    "إنشاء مشروع Vite + React + TypeScript داخل client/.",
-    "إعداد Tailwind و Axios مع Interceptor للـ JWT.",
-    "تفعيل CORS وربط React Router بالصفحات المحمية."
+    "إضافة Axios Interceptor لإرفاق JWT بالطلبات تلقائيًا.",
+    "الانتقال إلى شاشة تسجيل الدخول في المرحلة 13 بعد إكمال إعدادات Axios.",
+    "ربط حماية الصفحات بحالة تسجيل الدخول عند تنفيذ شاشة Login."
   ]
 };
 
@@ -223,11 +223,13 @@ const PHASES = [
  {code:"P12", t:"تجهيز الفرونت اند", sub:"Vite و React و TypeScript و Tailwind",
   learn:"هيكل مشروع React، TypeScript types مطابقة للـ DTOs، Axios instance و Interceptors، CORS، متغيرات البيئة.",
   tasks:[
-   ["todo","مشروع Vite + React + TS بفولدر <code>client/</code>"],
-   ["todo","Tailwind CSS"],
-   ["todo","Axios instance مع Interceptor بيضيف الـ JWT"],
-   ["todo","تفعيل CORS بالـ backend"],
-   ["todo","React Router وصفحات محمية"]
+   ["done","مشروع Vite + React + TS بفولدر <code>client/</code>"],
+   ["done","Tailwind CSS"],
+   ["done","Axios instance وعنوان الـ API عبر متغيرات البيئة"],
+   ["todo","Axios Interceptor بيضيف الـ JWT"],
+   ["done","تفعيل CORS بالـ backend"],
+   ["done","تثبيت React Router وإعداد BrowserRouter"],
+   ["todo","حماية الصفحات عند ربط تسجيل الدخول في المرحلة 13"]
   ]},
  {code:"P13", t:"شاشات الفرونت اند", sub:"تسجيل دخول، جداول، نقل، تقارير",
   learn:"TanStack Table (Pagination و Filtering و Sorting)، Forms، إدارة الحالة وجلب البيانات، معالجة الأخطاء بالواجهة.",
