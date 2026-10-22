@@ -17,7 +17,7 @@ public class LowStockAlertsController : ControllerBase
         _alertService = alertService;
     }
 
-    [HttpGet("low-stock")]
+    [HttpGet]
     public async Task<ActionResult<List<LowStockAlertResponse>>> GetActiveAlerts([FromQuery] Guid? warehouseId)
     {
         var alerts = await _alertService.GetActiveAlertsAsync(warehouseId);

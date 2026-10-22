@@ -90,16 +90,16 @@ footer{color:var(--muted);font-size:.85rem;text-align:center}
 
   <div class="phases" id="phases"></div>
 
-  <footer>آخر تحديث: 19 أكتوبر 2026</footer>
+  <footer>آخر تحديث: 22 أكتوبر 2026</footer>
 </div>
 
 <script>
 const NEXT = {
-  title: "المرحلة 11: Unit Tests",
+  title: "المرحلة 12: تجهيز الفرونت اند",
   steps: [
-    "إنشاء مشروع اختبارات باستخدام xUnit.",
-    "كتابة أول Unit Test وفهم Arrange و Act و Assert.",
-    "البدء باختبار قواعد الـ Entities ثم خدمات المخزون والنقل."
+    "إنشاء مشروع Vite + React + TypeScript داخل client/.",
+    "إعداد Tailwind و Axios مع Interceptor للـ JWT.",
+    "تفعيل CORS وربط React Router بالصفحات المحمية."
   ]
 };
 
@@ -212,13 +212,13 @@ const PHASES = [
    ["done","جدول تنبيهات أو اقتراحات إعادة توريد"],
    ["done","Endpoint لعرض التنبيهات"]
   ]},
- {code:"P11", t:"Unit Tests", sub:"xUnit و Moq",
-  learn:"كتابة اختبارات، Arrange-Act-Assert، Mocking، ليش منطق البزنس المعزول سهل تختبره.",
+ {code:"P11", t:"Unit Tests", sub:"xUnit واختبار قواعد الـ Entities",
+  learn:"تعلمنا Arrange-Act-Assert واختبرنا قواعد الـ Entities آليًا. تحققنا من StockTransferService يدويًا عبر Swagger؛ لم نضف Integration Test أو Mock لقاعدة البيانات.",
   tasks:[
-   ["todo","مشروع <code>WMS.UnitTests</code> داخل <code>tests/</code> وإضافته للـ solution"],
-   ["todo","اختبارات قواعد الـ Entities (رصيد سالب، نقل لنفس المستودع)"],
-   ["todo","اختبارات <code>StockTransferService</code> مع Mocks"],
-   ["todo","تشغيل كل الاختبارات بـ <code>dotnet test</code>"]
+   ["done","إنشاء مشروع <code>WMS.API.Tests</code> داخل <code>tests/</code> وإضافته للـ solution"],
+   ["done","اختبارات قواعد الـ Entities (رفض الكمية غير الصالحة، نفاد المخزون، النقل لنفس المستودع، وإكمال التحويل)"],
+   ["done","التحقق من <code>StockTransferService</code> يدويًا عبر Swagger؛ اختبار قاعدة البيانات الآلي خارج النطاق الحالي"],
+   ["done","تشغيل <code>dotnet test</code> بنجاح (8 اختبارات)"]
   ]},
  {code:"P12", t:"تجهيز الفرونت اند", sub:"Vite و React و TypeScript و Tailwind",
   learn:"هيكل مشروع React، TypeScript types مطابقة للـ DTOs، Axios instance و Interceptors، CORS، متغيرات البيئة.",

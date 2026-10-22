@@ -2,4 +2,7 @@
   <Folder Name="/src/">
     <Project Path="src/WMS.API/WMS.API.csproj" />
   </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/WMS.API.Tests/WMS.API.Tests.csproj" />
+  </Folder>
 </Solution>
