@@ -1,27 +1,32 @@
 @import "tailwindcss";
 
-:root {
-  font-family: "Segoe UI", Inter, -apple-system, BlinkMacSystemFont, sans-serif;
-  color: #23382d;
-  background: #f5f5ef;
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  color-scheme: light;
-
+@theme {
+  --font-sans: "Segoe UI", Inter, -apple-system, BlinkMacSystemFont, sans-serif;
   --color-ink: #23382d;
   --color-muted: #72796c;
   --color-accent: #efad5c;
   --color-surface: #f5f5ef;
   --color-border: #dcdfd4;
   --font-mono: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+  --animate-appear: appear 550ms ease-out both;
+
+  @keyframes appear {
+    from { opacity: 0; transform: translateY(9px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
 }
 
-* { box-sizing: border-box; }
-body { margin: 0; min-width: 320px; }
-#root { min-height: 100svh; }
-button, input { font: inherit; }
-button { cursor: pointer; }
-button:disabled { cursor: wait; }
-::selection { color: #172b21; background: #f4c58a; }
+@layer base {
+  :root {
+    @apply bg-surface font-sans text-ink antialiased;
+    font-synthesis: none;
+    text-rendering: optimizeLegibility;
+    color-scheme: light;
+  }
+
+  body { @apply min-w-[320px]; }
+  #root { @apply min-h-svh; }
+  button { @apply cursor-pointer; }
+  button:disabled { @apply cursor-wait; }
+  ::selection { @apply bg-[#f4c58a] text-[#172b21]; }
+}

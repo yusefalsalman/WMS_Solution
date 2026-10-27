@@ -1,14 +1,14 @@
-<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<!doctype html><html lang="en" dir="ltr"><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
 <title>WMS Build Roadmap</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;700&family=JetBrains+Mono:wght@400;600&display=swap">
 <style>
 /* Layout: one reading column, a "next step" ticket on top, then phases as aisle cards with collapsible task lists */
 :root{
   --bg:#f3f5f8; --surface:#ffffff; --ink:#152033; --muted:#5b6678; --line:#d9dee7;
   --accent:#e0a100; --accent-ink:#5a4100; --accent-soft:#fff4d6;
   --done:#1f8a55; --done-soft:#e3f4ea; --doing:#2563c9; --doing-soft:#e3ecfb; --todo:#8a93a3;
-  --f-body:"IBM Plex Sans Arabic",Tahoma,"Segoe UI",sans-serif;
+  --f-body:"IBM Plex Sans","Segoe UI",sans-serif;
   --f-mono:"JetBrains Mono",ui-monospace,Consolas,monospace;
 }
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
@@ -31,7 +31,7 @@ header p{margin:4px 0 0;color:var(--muted)}
 .bar{height:10px;background:var(--line);border-radius:999px;overflow:hidden}
 .bar i{display:block;height:100%;background:var(--done);border-radius:999px}
 .ticket{background:var(--accent-soft);border:1.5px dashed var(--accent);border-radius:10px;padding:18px 20px;display:flex;flex-direction:column;gap:6px}
-.ticket .lbl{font-family:var(--f-mono);font-size:.75rem;letter-spacing:.12em;color:var(--accent-ink);text-transform:uppercase;direction:ltr;text-align:right}
+.ticket .lbl{font-family:var(--f-mono);font-size:.75rem;letter-spacing:.12em;color:var(--accent-ink);text-transform:uppercase;direction:ltr;text-align:left}
 .ticket h2{margin:0;font-size:1.15rem;color:var(--accent-ink)}
 .ticket ol{margin:0;padding-inline-start:22px;color:var(--ink)}
 .legend{display:flex;gap:16px;flex-wrap:wrap;font-size:.85rem;color:var(--muted)}
@@ -65,209 +65,219 @@ footer{color:var(--muted);font-size:.85rem;text-align:center}
 @media (prefers-reduced-motion:no-preference){.bar i{transition:width .6s ease}}
 </style>
 
-<div class="wrap" dir="rtl" lang="ar">
+<div class="wrap" dir="ltr" lang="en">
   <header>
-    <h1>خطة بناء نظام إدارة المخازن (WMS)</h1>
-    <p>ASP.NET Core Web API على .NET 10 بطبقات، مع PostgreSQL و EF Core و Dapper، وواجهة React + TypeScript.</p>
+    <h1>Warehouse Management System Roadmap</h1>
+    <p>A layered ASP.NET Core Web API on .NET 10, with PostgreSQL, EF Core, and Dapper, plus a React + TypeScript frontend.</p>
   </header>
 
-  <section class="meter" aria-label="التقدم">
-    <div class="meter-top"><span>التقدّم الكلي</span><span id="meterText"></span></div>
+  <section class="meter" aria-label="Progress">
+    <div class="meter-top"><span>Overall progress</span><span id="meterText"></span></div>
     <div class="bar"><i id="meterBar" style="width:0"></i></div>
   </section>
 
-  <section class="ticket" aria-label="الخطوة الجاية">
+  <section class="ticket" aria-label="Next step">
     <span class="lbl">Next step</span>
     <h2 id="nextTitle"></h2>
     <ol id="nextList"></ol>
   </section>
 
   <div class="legend">
-    <span><i class="dot" style="background:var(--done)"></i>خلص</span>
-    <span><i class="dot" style="background:var(--doing)"></i>شغّالين فيه</span>
-    <span><i class="dot" style="background:var(--todo)"></i>لسا</span>
+    <span><i class="dot" style="background:var(--done)"></i>Done</span>
+    <span><i class="dot" style="background:var(--doing)"></i>In progress</span>
+    <span><i class="dot" style="background:var(--todo)"></i>To do</span>
   </div>
 
   <div class="phases" id="phases"></div>
 
-  <footer>آخر تحديث: 27 أكتوبر 2026</footer>
+  <footer>Last updated: October 27, 2026</footer>
 </div>
 
 <script>
 const NEXT = {
-  title: "تكملة تسجيل الدخول: حماية المسارات وتجربة الربط",
+  title: "Next: Install TanStack Table and build the product screen",
   steps: [
-    "إنشاء ProtectedRoute لتحويل المستخدم غير المسجّل إلى /login.",
-    "إعداد الانتقال بعد نجاح الدخول وزر Logout والتعامل مع انتهاء الجلسة ورد 401.",
-    "تجربة الدخول الصحيح والخاطئ والخروج وطلب API محمي قبل الانتقال لشاشات المخزون."
+    "Pagination and TanStack Table have been explained. Install @tanstack/react-table, then build the shared application layout and table component.",
+    "Connect the product page to getProducts(page, pageSize) with server-side pagination, loading/error/empty states, and product forms restricted to Manager/Admin. Keep filtering and sorting within the scope supported by the API.",
+    "Use the product screen to verify an authenticated API request in the browser; finish invalid-login and expiry checks. Session expiry and 401/403 handling have passed simulated checks."
   ]
 };
 
 const PHASES = [
- {code:"P00", t:"تجهيز المشروع", sub:"Solution و Web API وفولدرات و Git",
-  learn:"Solution مقابل Project، أوامر dotnet، قسمي Program.cs (تسجيل الخدمات و الـ Pipeline)، top-level statements، قراءة الـ errors، أساسيات Git.",
+ {code:"P00", t:"Project setup", sub:"Solution, Web API, folders, and Git",
+  learn:"Solutions vs. projects, dotnet commands, service registration and the request pipeline in Program.cs, top-level statements, reading errors, and Git basics.",
   tasks:[
-   ["done","فهم الفرق بين Clean Architecture و Layered، واختيار Layered"],
-   ["done","إنشاء <code>WMS.slnx</code> ومشروع <code>WMS.API</code> بـ Controllers داخل <code>src/</code>"],
-   ["done","إنشاء الفولدرات: Controllers و Services و Interfaces و Data و Models/Entities و Models/DTOs"],
-   ["done","تنظيف WeatherForecast وإضافة <code>AddControllers</code> و <code>MapControllers</code>"],
-   ["done","تشغيل المشروع وفتح <code>/openapi/v1.json</code>"],
-   ["done","<code>git init</code> و <code>.gitignore</code> وأول commit"],
-   ["done","commit لملفي <code>WMS.slnx</code> و <code>.gitignore</code> ورفع المشروع على GitHub"]
+   ["done","Compare Clean Architecture with layered architecture and choose the layered approach"],
+   ["done","Create <code>WMS.slnx</code> and the controller-based <code>WMS.API</code> project inside <code>src/</code>"],
+   ["done","Create folders: Controllers, Services, Interfaces, Data, Models/Entities, and Models/DTOs"],
+   ["done","Remove WeatherForecast and add <code>AddControllers</code> and <code>MapControllers</code>"],
+   ["done","Run the project and open <code>/openapi/v1.json</code>"],
+   ["done","Run <code>git init</code>, add <code>.gitignore</code>, and create the first commit"],
+   ["done","Commit <code>WMS.slnx</code> and <code>.gitignore</code>, then push the project to GitHub"]
   ]},
- {code:"P01", t:"تصميم الـ Entities", sub:"Product و Warehouse و InventoryItem و StockTransfer و AuditLog",
-  learn:"تصميم الكلاسات، Encapsulation (private set وميثودز بدل التعديل المباشر)، Enums، Exceptions مخصصة، قواعد البزنس جوا الـ Entity.",
+ {code:"P01", t:"Entity design", sub:"Product, Warehouse, InventoryItem, StockTransfer, and AuditLog",
+  learn:"Class design, encapsulation with private setters and methods, enums, custom exceptions, and business rules inside entities.",
   tasks:[
-   ["done","<code>BaseEntity</code>: Id و CreatedAt و UpdatedAt"],
-   ["done","<code>Product</code>: SKU فريد، اسم، وحدة قياس، حد أدنى للمخزون (Low Stock Threshold)"],
-   ["done","<code>UnitOfMeasure</code> enum بأرقام صريحة"],
-   ["done","<code>Warehouse</code>: كود، اسم، موقع، فعّال أو لا"],
-   ["done","<code>InventoryItem</code>: رصيد منتج بمستودع، مع Navigation Properties"],
-   ["done","ميثودز <code>AddStock</code> و <code>RemoveStock</code> بتمنع الرصيد السالب (Encapsulation)"],
-   ["done","<code>StockTransfer</code>: من مستودع لمستودع، كمية، حالة، مع constructor بيفحص القواعد"],
-   ["done","enum <code>TransferStatus</code>"],
-   ["done","<code>AuditLog</code> + enum <code>MovementType</code>: شو صار للمخزون ومتى"],
-   ["done","Exceptions: <code>DomainException</code> و <code>InsufficientStockException</code>"]
+   ["done","<code>BaseEntity</code>: Id, CreatedAt, and UpdatedAt"],
+   ["done","<code>Product</code>: unique SKU, name, unit of measure, and low-stock threshold"],
+   ["done","<code>UnitOfMeasure</code> enum with explicit numeric values"],
+   ["done","<code>Warehouse</code>: code, name, location, and active status"],
+   ["done","<code>InventoryItem</code>: product quantity in a warehouse, with navigation properties"],
+   ["done","Encapsulate stock changes in <code>AddStock</code> and <code>RemoveStock</code> to prevent negative balances"],
+   ["done","<code>StockTransfer</code>: source, destination, quantity, status, and constructor validation"],
+   ["done","<code>TransferStatus</code> enum"],
+   ["done","<code>AuditLog</code> and <code>MovementType</code> enum: record inventory changes and their timestamps"],
+   ["done","Custom exceptions: <code>DomainException</code> and <code>InsufficientStockException</code>"]
   ]},
- {code:"P02", t:"قاعدة البيانات و EF Core", sub:"PostgreSQL و DbContext و Migrations",
-  learn:"ORM، DbContext و DbSet، Fluent API، العلاقات (1-to-many)، Indexes و Unique constraints، Migrations، Seeding، الـ Connection String و User Secrets.",
+ {code:"P02", t:"Database and EF Core", sub:"PostgreSQL, DbContext, and migrations",
+  learn:"ORMs, DbContext and DbSet, Fluent API, one-to-many relationships, indexes, unique constraints, migrations, seeding, connection strings, and User Secrets.",
   tasks:[
-   ["done","مشروع على Neon مع branch للتطوير (dev) و branch للـ production"],
-   ["done","تنزيل packages: Npgsql provider و EF Core Design و أداة <code>dotnet-ef</code>"],
-   ["done","<code>AppDbContext</code> بفولدر Data وتسجيله بالـ DI"],
-   ["done","Configurations منفصلة لكل Entity (<code>IEntityTypeConfiguration</code>)"],
-   ["done","Unique index على SKU و Warehouse Code و (WarehouseId, ProductId)"],
-   ["done","Connection String بـ User Secrets (برّا الـ repo)"],
-   ["done","أول Migration وتطبيقها، وفحص الجداول بالداتابيز"],
-   ["done","Migration تانية: <code>Restrict</code> بدل <code>Cascade</code> على AuditLog"],
-   ["done","Seed data: مستودعين وكم منتج للتجربة (<code>DbSeeder</code>)"]
+   ["done","Create a Neon project with development (dev) and production branches"],
+   ["done","Install the Npgsql provider, EF Core Design, and the <code>dotnet-ef</code> tool"],
+   ["done","Create <code>AppDbContext</code> in Data and register it with dependency injection"],
+   ["done","Add separate entity configurations using <code>IEntityTypeConfiguration</code>"],
+   ["done","Add unique indexes for SKU, warehouse code, and (WarehouseId, ProductId)"],
+   ["done","Store the connection string in User Secrets, outside the repository"],
+   ["done","Create and apply the initial migration, then inspect the database tables"],
+   ["done","Add a migration to use <code>Restrict</code> instead of <code>Cascade</code> for AuditLog deletes"],
+   ["done","Seed two warehouses and sample products using <code>DbSeeder</code>"]
   ]},
- {code:"P03", t:"أول CRUD كامل", sub:"Products و Warehouses من الـ Controller للداتابيز",
-  learn:"DTOs و Mapping، Interfaces و Dependency Injection، أعمار الخدمات (Scoped و Transient و Singleton)، async/await، REST و HTTP status codes.",
+ {code:"P03", t:"Complete CRUD workflows", sub:"Products and warehouses, from controllers to the database",
+  learn:"DTOs and mapping, interfaces, dependency injection, Scoped/Transient/Singleton service lifetimes, async/await, REST, and HTTP status codes.",
   tasks:[
-   ["done","DTOs لكل الـ Entities (Request و Response)"],
-   ["done","<code>IProductService</code> و <code>ProductService</code> وتسجيلهم بالـ DI"],
-   ["done","<code>ProductsController</code>: GET و GET by id و POST و PUT و DELETE"],
-   ["done","نفس الإشي لـ Warehouses"],
-   ["done","الـ enums بترجع كنص بالـ JSON"],
-   ["done","واجهة لتجربة الـ API: Swagger UI على <code>/swagger</code>"],
-   ["done","Pagination على القوائم (<code>PagedResponse&lt;T&gt;</code>)"],
-   ["done","Soft delete بدل الحذف النهائي"]
+   ["done","Create request and response DTOs for the entities"],
+   ["done","Implement <code>IProductService</code> and <code>ProductService</code>, and register them with DI"],
+   ["done","Implement GET, GET by ID, POST, PUT, and DELETE in <code>ProductsController</code>"],
+   ["done","Implement the equivalent warehouse endpoints and service"],
+   ["done","Serialize enums as strings in JSON"],
+   ["done","Set up Swagger UI at <code>/swagger</code> to try the API"],
+   ["done","Paginate list responses using <code>PagedResponse&lt;T&gt;</code>"],
+   ["done","Use soft deletion instead of permanent deletion"]
   ]},
- {code:"P04", t:"Validation ومعالجة الأخطاء", sub:"FluentValidation و Global Exception Handling",
-  learn:"FluentValidation، Middleware و <code>IExceptionHandler</code>، ProblemDetails، Logging بـ ILogger.",
+ {code:"P04", t:"Validation and error handling", sub:"FluentValidation and global exception handling",
+  learn:"FluentValidation, middleware, <code>IExceptionHandler</code>, ProblemDetails, and logging with ILogger.",
   tasks:[
-   ["done","Validators لـ Product و Warehouse (Create و Update)"],
-   ["done","Global Exception Handler بيحوّل الـ exceptions لردود موحّدة (ProblemDetails)"],
-   ["done","SKU أو Code مكرر ← 409، و <code>InsufficientStockException</code> ← 409"],
-   ["done","Logging للأخطاء غير المتوقعة بـ ILogger"]
+   ["done","Validate product and warehouse create/update requests"],
+   ["done","Convert exceptions into consistent ProblemDetails responses with a global exception handler"],
+   ["done","Return 409 for duplicate SKUs or warehouse codes and for <code>InsufficientStockException</code>"],
+   ["done","Log unexpected errors using ILogger"]
   ]},
- {code:"P05", t:"حركة المخزون", sub:"استلام وصرف وتعديل رصيد مع سجل تدقيق",
-  learn:"منطق البزنس بالـ Services، كتابة AuditLog لكل حركة، الـ Change Tracker بـ EF.",
+ {code:"P05", t:"Inventory movements", sub:"Stock receipts, issues, and adjustments with an audit trail",
+  learn:"Business logic in services, audit logging for every movement, and EF Core change tracking.",
   tasks:[
-   ["done","Endpoint لاستلام بضاعة (Stock In)"],
-   ["done","Endpoint لصرف بضاعة (Stock Out) مع منع السالب"],
-   ["done","Endpoint لتعديل الجرد (Adjustment) مع سبب"],
-   ["done","تسجيل كل حركة بـ AuditLog تلقائياً"],
-   ["done","عرض رصيد منتج بكل المستودعات"]
+   ["done","Add a stock-in endpoint for receiving goods"],
+   ["done","Add a stock-out endpoint that prevents negative balances"],
+   ["done","Add an inventory adjustment endpoint with a required reason"],
+   ["done","Automatically create an AuditLog for each movement"],
+   ["done","Display a product's stock across warehouses"]
   ]},
- {code:"P06", t:"نقل المخزون بـ ACID Transaction", sub:"خصم وإضافة وتسجيل، أو Rollback كامل",
-  learn:"ACID، Transactions الصريحة (<code>BeginTransactionAsync</code> و Commit و Rollback)، Unit of Work.",
+ {code:"P06", t:"Stock transfers with ACID transactions", sub:"Deduct, add, and record together, or roll back everything",
+  learn:"ACID, explicit transactions using <code>BeginTransactionAsync</code>, commit and rollback, and the Unit of Work pattern.",
   tasks:[
-   ["done","<code>IStockTransferService</code> و <code>StockTransferService</code>"],
-   ["done","خصم من المستودع أ، إضافة للمستودع ب، إنشاء سجل نقل، بنفس الـ Transaction"],
-   ["done","Rollback لو فشلت أي خطوة، وتجربة الفشل عن قصد"],
-   ["done","منع النقل لنفس المستودع"],
-   ["done","<code>TransfersController</code> وسجل التحويلات"]
+   ["done","Implement <code>IStockTransferService</code> and <code>StockTransferService</code>"],
+   ["done","Deduct source stock, add destination stock, and create the transfer record in one transaction"],
+   ["done","Roll back if any step fails, and deliberately test a failure scenario"],
+   ["done","Prevent transfers to the same warehouse"],
+   ["done","Implement <code>TransfersController</code> and transfer history"]
   ]},
- {code:"P07", t:"التزامن (Concurrency)", sub:"موظفين بينقلوا نفس القطعة بنفس اللحظة",
-  learn:"Race conditions، Optimistic concurrency (عمود <code>xmin</code> بـ PostgreSQL)، Pessimistic locking (<code>SELECT ... FOR UPDATE</code>)، <code>DbUpdateConcurrencyException</code>.",
+ {code:"P07", t:"Concurrency", sub:"Handle simultaneous transfers of the same stock",
+  learn:"Race conditions, optimistic concurrency with PostgreSQL <code>xmin</code>, pessimistic locking using <code>SELECT ... FOR UPDATE</code>, and <code>DbUpdateConcurrencyException</code>.",
   tasks:[
-   ["done","إعادة إنتاج المشكلة: طلبين متوازيين بيخلّوا الرصيد غلط"],
-   ["done","Optimistic concurrency على <code>InventoryItem</code>"],
-   ["done","معالجة الـ conflict ورد 409 أو إعادة المحاولة"],
-   ["done","Pessimistic lock بعملية النقل والمقارنة بين الطريقتين"]
+   ["done","Reproduce incorrect balances caused by two concurrent requests"],
+   ["done","Configure optimistic concurrency on <code>InventoryItem</code>"],
+   ["done","Handle conflicts with a 409 response or a retry"],
+   ["done","Use pessimistic locking during transfers and compare the two approaches"]
   ]},
- {code:"P08", t:"تقارير سريعة بـ Dapper", sub:"جرد، بحث، وسجل تدقيق",
-  learn:"Dapper، كتابة SQL يدوي، Parameters ومنع SQL Injection، متى EF ومتى Dapper.",
+ {code:"P08", t:"Fast reports with Dapper", sub:"Stock summaries, low-stock queries, and audit history",
+  learn:"Dapper, hand-written SQL, parameters and SQL injection prevention, and when to use EF Core vs. Dapper.",
   tasks:[
-   ["done","تنزيل Dapper واستخدام نفس الـ connection"],
-   ["done","تقرير جرد لكل مستودع (مجاميع و GROUP BY)"],
-   ["done","بحث سريع عن المنتجات تحت الحد الأدنى"],
-   ["done","استعلام سجل التدقيق مع فلترة بالتاريخ والمستخدم"]
+   ["done","Install Dapper and reuse the database connection"],
+   ["done","Build a stock report per warehouse with aggregates and GROUP BY"],
+   ["done","Query products below their low-stock threshold"],
+   ["done","Query the audit log with date and user filters"]
   ]},
- {code:"P09", t:"تسجيل الدخول والصلاحيات", sub:"JWT و Roles",
-  learn:"Authentication مقابل Authorization، تشفير كلمات السر (Hashing)، JWT (Claims و Signing و Expiry)، Role-based Authorization.",
+ {code:"P09", t:"Authentication and authorization", sub:"JWT and roles",
+  learn:"Authentication vs. authorization, password hashing, JWT claims/signing/expiry, and role-based authorization.",
   tasks:[
-   ["done","Entity لـ <code>User</code> و enum <code>UserRole</code> (Admin و Manager و Clerk)"],
-   ["done","Register و Login مع Password Hashing"],
-   ["done","إصدار JWT والتحقق منه بالـ middleware"],
-   ["done","<code>[Authorize]</code> وصلاحيات حسب الدور على الـ endpoints"],
-   ["done","ربط AuditLog بالمستخدم الحالي من التوكن"]
+   ["done","Add the <code>User</code> entity and <code>UserRole</code> enum (Admin, Manager, and Clerk)"],
+   ["done","Implement account creation and login with password hashing"],
+   ["done","Issue JWTs and validate them through middleware"],
+   ["done","Apply <code>[Authorize]</code> and role-based endpoint permissions"],
+   ["done","Associate AuditLog records with the current user from the token"]
   ]},
- {code:"P10", t:"Background Job للمخزون المنخفض", sub:"فحص دوري وتوليد تنبيهات",
-  learn:"استخدمنا <code>BackgroundService</code> (المبني على <code>IHostedService</code>) و Scope لكل دورة داخل الـ Hosted Service للتعامل مع الخدمات المسجّلة كـ Scoped. <code>Quartz.NET</code> اختياري ولم نستخدمه.",
+ {code:"P10", t:"Low-stock background job", sub:"Periodic checks and alert generation",
+  learn:"We used <code>BackgroundService</code>, which implements <code>IHostedService</code>, and created a scope per cycle to resolve scoped services. <code>Quartz.NET</code> is optional and was not used.",
   tasks:[
-   ["done","خدمة بتشتغل كل فترة وبتفحص المنتجات تحت الحد الأدنى"],
-   ["done","جدول تنبيهات أو اقتراحات إعادة توريد"],
-   ["done","Endpoint لعرض التنبيهات"]
+   ["done","Run a periodic service that checks products below their low-stock threshold"],
+   ["done","Store alerts or replenishment suggestions in a database table"],
+   ["done","Expose an endpoint to display alerts"]
   ]},
- {code:"P11", t:"Unit Tests", sub:"xUnit واختبار قواعد الـ Entities",
-  learn:"تعلمنا Arrange-Act-Assert واختبرنا قواعد الـ Entities آليًا. تحققنا من StockTransferService يدويًا عبر Swagger؛ لم نضف Integration Test أو Mock لقاعدة البيانات.",
+ {code:"P11", t:"Unit tests", sub:"xUnit and entity business rules",
+  learn:"We used Arrange-Act-Assert to test entity rules automatically. StockTransferService was verified manually through Swagger; no automated database integration tests or database mocks were added.",
   tasks:[
-   ["done","إنشاء مشروع <code>WMS.API.Tests</code> داخل <code>tests/</code> وإضافته للـ solution"],
-   ["done","اختبارات قواعد الـ Entities (رفض الكمية غير الصالحة، نفاد المخزون، النقل لنفس المستودع، وإكمال التحويل)"],
-   ["done","التحقق من <code>StockTransferService</code> يدويًا عبر Swagger؛ اختبار قاعدة البيانات الآلي خارج النطاق الحالي"],
-   ["done","تشغيل <code>dotnet test</code> بنجاح (8 اختبارات)"]
+   ["done","Create <code>WMS.API.Tests</code> inside <code>tests/</code> and add it to the solution"],
+   ["done","Test entity rules: invalid quantities, insufficient stock, same-warehouse transfers, and transfer completion"],
+   ["done","Verify <code>StockTransferService</code> manually through Swagger; automated database tests are outside the current scope"],
+   ["done","Run <code>dotnet test</code> successfully (8 tests)"]
   ]},
- {code:"P12", t:"تجهيز الفرونت اند", sub:"Vite و React و TypeScript و Tailwind",
-  learn:"هيكل مشروع React، TypeScript types مطابقة للـ DTOs، Axios instance و Interceptors، CORS، متغيرات البيئة.",
+ {code:"P12", t:"Frontend setup", sub:"Vite, React, TypeScript, and Tailwind",
+  learn:"React project structure, TypeScript types matching backend DTOs, Axios instances and interceptors, CORS, and environment variables.",
   tasks:[
-   ["done","مشروع Vite + React + TS بفولدر <code>client/</code>"],
-   ["done","Tailwind CSS"],
-   ["done","Axios instance وعنوان الـ API عبر متغيرات البيئة"],
-   ["done","Axios Interceptor بيضيف الـ JWT"],
-   ["done","تفعيل CORS بالـ backend"],
-   ["done","تثبيت React Router وإعداد BrowserRouter"],
-   ["todo","حماية الصفحات عند ربط تسجيل الدخول في المرحلة 13"]
+   ["done","Create a Vite + React + TypeScript project inside <code>client/</code>"],
+   ["done","Set up Tailwind CSS"],
+   ["done","Configure an Axios instance and the API URL through environment variables"],
+   ["done","Attach the JWT with an Axios request interceptor"],
+   ["done","Enable CORS in the backend"],
+   ["done","Install React Router and configure BrowserRouter"],
+   ["done","Protect internal pages with ProtectedRoute and redirect unauthenticated users to /login"]
   ]},
- {code:"P13", t:"شاشات الفرونت اند", sub:"تسجيل دخول، جداول، نقل، تقارير",
-  learn:"لكل صفحة نجهّز Types مطابقة للـ DTOs ودوال اتصال بالـ API ثم الواجهة. نتعلم Forms و AuthContext و AuthProvider وإدارة الحالة وجلب البيانات ومعالجة الأخطاء، و TanStack Table (Pagination و Filtering و Sorting).",
+ {code:"P13", t:"Frontend screens", sub:"Login, tables, transfers, and reports",
+  learn:"For each screen, define types matching the backend DTOs and API functions, then build the UI. Topics include forms, AuthContext, AuthProvider, state management, data fetching, error handling, and TanStack Table pagination/filtering/sorting.",
   tasks:[
-   ["done","Types لتسجيل الدخول: LoginRequest و LoginResponse و UserRole"],
-   ["done","دالة login للاتصال بـ POST /api/auth/login"],
-   ["done","AuthContext و AuthProvider لحالة الجلسة وتسجيل الدخول والخروج، وربط الـ Provider بالتطبيق"],
-   ["done","useAuth لقراءة حالة المستخدم ودوال تسجيل الدخول والخروج"],
-   ["done","فورم Login مربوط بـ signIn مع حالة التحميل ومنع الإرسال المتكرر ورسائل الخطأ"],
-   ["done","تصميم Login بهوية المستودعات وألوان مشتركة، مع مراجعة الشكل على الكمبيوتر والموبايل"],
-   ["done","عرض Login على /login وتحويل المسارات غير المعروفة إليه مؤقتًا"],
-   ["todo","الانتقال إلى صفحة داخل النظام بعد نجاح الدخول"],
-   ["todo","زر Logout وربط انتهاء الجلسة ورد 401 بتسجيل الخروج"],
-   ["todo","تجربة الدخول الصحيح والخاطئ والخروج وطلب API محمي من المتصفح"],
-   ["todo","جدول المنتجات والمستودعات (TanStack Table)"],
-   ["todo","شاشة المخزون لكل مستودع"],
-   ["todo","فورم نقل بضاعة مع رسائل خطأ واضحة"],
-   ["todo","Dashboard: تقارير وتنبيهات المخزون المنخفض"]
+   ["done","Define login types: LoginRequest, LoginResponse, and UserRole"],
+   ["done","Implement the login function calling POST /api/auth/login"],
+   ["done","Implement AuthContext and AuthProvider for session state, sign-in, and sign-out, and wrap the app in the provider"],
+   ["done","Implement useAuth to access the session and sign-in/sign-out functions"],
+   ["done","Connect the login form to signIn with loading feedback, duplicate-submit prevention, and error messages"],
+   ["done","Design the login screen with a warehouse identity and shared colors, and review desktop and mobile layouts"],
+   ["done","Use Tailwind utilities for login and home styling; retain one global stylesheet for theme tokens, base styles, and a custom animation; remove unused template assets"],
+   ["done","Display Login at /login and redirect unknown routes to the protected home route"],
+   ["done","Navigate to a temporary home screen after login and redirect signed-in users away from /login"],
+   ["done","Persist the session in sessionStorage, restore session state and the Axios token after reload, and reject malformed or expired stored sessions"],
+   ["done","Add a logout button that clears storage, the Axios token, and React session state, triggering the protected-route redirect"],
+   ["done","Clear the session on protected API 401 responses without logging out on 403 or invalid login; expire the session with a timer and focus/visibility checks, and clean up interceptors, timers, and listeners"],
+   ["done","Pass 8 simulated checks covering protected 401, 403, invalid-login 401, success, expiry timer, focus, visibility, and cleanup; frontend build and lint pass"],
+   ["doing","Browser verification: successful login, reload persistence, and logout confirmed by the user; invalid login, expiry, and authenticated API requests still pending (simulated checks are complete)"],
+   ["done","Define request/response types and API functions for products, warehouses, inventory movements, transfers, reports, and active alerts, matching backend routes, pagination, and string enums"],
+   ["done","Explain server-side pagination (page/pageSize, replacing the displayed page) and the role of TanStack Table separately from Axios and Tailwind"],
+   ["todo","Install TanStack Table and build a reusable table component with server-side pagination for product and warehouse lists"],
+   ["todo","Build a responsive shared layout with navigation, user details, logout, and role-aware links and actions"],
+   ["todo","Build the product screen: paginated list, create/edit forms, and delete confirmation; restrict write actions to Manager/Admin"],
+   ["todo","Build the warehouse screen: paginated list, create/edit forms, active status, and delete confirmation; restrict write actions to Manager/Admin"],
+   ["todo","Build the inventory screen with warehouse/product filters, stock-in and stock-out forms, and Manager/Admin stock adjustment"],
+   ["todo","Build the stock transfer list and form with product/source/destination selection and clear validation and API error messages"],
+   ["todo","Replace the temporary home screen with a dashboard, warehouse stock summaries, low-stock reports, active alerts, and audit-log filters; restrict report/alert requests to Manager/Admin"],
+   ["todo","Verify frontend screens in the browser: loading/error/empty states, pagination, role restrictions, forms, and refreshed data after successful operations"]
   ]},
- {code:"P14", t:"النشر (Deployment)", sub:"Neon و Docker واستضافة الباك والفرونت",
-  learn:"Dockerfile، متغيرات البيئة بالـ production، Migrations على السيرفر، CORS للدومين الحقيقي.",
+ {code:"P14", t:"Deployment", sub:"Neon, Docker, and backend/frontend hosting",
+  learn:"Dockerfiles, production environment variables, server-side migrations, and CORS for the production domain.",
   tasks:[
-   ["todo","قاعدة بيانات على Neon"],
-   ["todo","Dockerfile للـ API"],
-   ["todo","نشر الـ API (Render أو Railway أو Azure)"],
-   ["todo","نشر الفرونت اند (Vercel أو Netlify)"],
-   ["todo","فحص النظام كامل أونلاين"]
+   ["todo","Set up the database on Neon"],
+   ["todo","Create a Dockerfile for the API"],
+   ["todo","Deploy the API to Render, Railway, or Azure"],
+   ["todo","Deploy the frontend to Vercel or Netlify"],
+   ["todo","Verify the complete system online"]
   ]},
- {code:"P15", t:"التشطيب والـ Portfolio", sub:"README وصور وشرح",
-  learn:"توثيق المشروع، كيف تحكي عنه بالمقابلة.",
+ {code:"P15", t:"Documentation and portfolio", sub:"README, screenshots, and project presentation",
+  learn:"Project documentation and explaining the project in interviews.",
   tasks:[
-   ["todo","README فيه الفكرة والتقنيات وطريقة التشغيل وصور"],
-   ["todo","ملف <code>.http</code> فيه أمثلة لكل الـ endpoints"],
-   ["todo","سطر المشروع بالـ CV وتجهيز شرحه للمقابلات"]
+   ["todo","Write a README covering the idea, technologies, setup instructions, and screenshots"],
+   ["todo","Add a <code>.http</code> file with examples for every endpoint"],
+   ["todo","Add the project to the CV and prepare an interview walkthrough"]
   ]}
 ];
 
-const label = {done:"خلص", doing:"شغّالين فيه", todo:"لسا"};
+const label = {done:"Done", doing:"In progress", todo:"To do"};
 function phaseState(tasks){
   if (tasks.every(t=>t[0]==="done")) return "done";
   if (tasks.some(t=>t[0]!=="todo")) return "doing";
@@ -276,7 +286,7 @@ function phaseState(tasks){
 const all = PHASES.flatMap(p=>p.tasks);
 const doneN = all.filter(t=>t[0]==="done").length;
 const pct = Math.round(doneN/all.length*100);
-document.getElementById("meterText").innerHTML = `<b>${doneN}</b> من ${all.length} مهمة · ${pct}%`;
+document.getElementById("meterText").innerHTML = `<b>${doneN}</b> of ${all.length} tasks · ${pct}%`;
 requestAnimationFrame(()=>{document.getElementById("meterBar").style.width = pct+"%";});
 
 document.getElementById("nextTitle").textContent = NEXT.title;
@@ -290,7 +300,7 @@ document.getElementById("phases").innerHTML = PHASES.map(p=>{
     <summary><span class="code">${p.code}</span><span class="ttl"><strong>${p.t}</strong><small>${p.sub}</small></span><span class="pill ${s}">${pill}</span></summary>
     <div class="body">
       <ul class="tasks">${p.tasks.map(([st,txt])=>`<li class="${st}"><span class="box" aria-label="${label[st]}">${st==="done"?"✓":""}</span><span class="txt">${txt}</span></li>`).join("")}</ul>
-      <div class="learn"><b>رح تتعلّم:</b> ${p.learn}</div>
+      <div class="learn"><b>Learning topics:</b> ${p.learn}</div>
     </div>
   </details>`;
 }).join("");

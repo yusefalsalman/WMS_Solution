@@ -1,6 +1,6 @@
 export function WarehouseIllustration() {
   return (
-    <svg className="warehouse-illustration" viewBox="0 0 640 350" fill="none" aria-hidden="true" focusable="false">
+    <svg className="mx-auto block h-auto w-full max-w-[520px]" viewBox="0 0 640 350" fill="none" aria-hidden="true" focusable="false">
       <defs>
         <pattern id="wms-floor-grid" width="32" height="32" patternUnits="userSpaceOnUse">
           <path d="M32 0H0V32" stroke="#b5cbb4" strokeOpacity=".09" />
