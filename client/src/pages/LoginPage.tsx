@@ -99,6 +99,18 @@ export function LoginPage() {
           <h2 className="mb-2.5 text-[29px] leading-[1.2] font-semibold tracking-[-1px] text-ink min-[721px]:text-[clamp(30px,3vw,38px)] min-[721px]:tracking-[-1.5px]" id="login-form-heading">{t("Welcome back.")}</h2>
           <p className="mb-[27px] text-[13px] leading-[1.7] text-muted min-[721px]:mb-[34px] min-[721px]:text-sm">{t("Sign in to keep your warehouse moving.")}</p>
 
+          <aside aria-labelledby="demo-account-heading" className="mb-6 rounded-xl border border-[#bfd3b6] bg-[#edf5e7] p-4 text-[#294b34]">
+            <h3 id="demo-account-heading" className="flex items-center gap-2 text-sm font-semibold">
+              <span className="size-2 rounded-full bg-[#527c40]" aria-hidden="true" />
+              {t("Demo account")}
+            </h3>
+            <p className="mt-1.5 text-xs leading-relaxed text-[#52684b]">{t("Explore the demo using these credentials.")}</p>
+            <dl className="mt-3 grid gap-2 text-xs">
+              <div className="flex items-center justify-between gap-4"><dt>{t("Username")}</dt><dd><code dir="ltr" className="select-all rounded-md border border-[#d2e1ca] bg-white/80 px-2 py-1 font-mono text-sm">admin</code></dd></div>
+              <div className="flex items-center justify-between gap-4"><dt>{t("Password")}</dt><dd><code dir="ltr" className="select-all rounded-md border border-[#d2e1ca] bg-white/80 px-2 py-1 font-mono text-sm">admin123</code></dd></div>
+            </dl>
+          </aside>
+
           <form onSubmit={handleSubmit}>
             <div>
               <label className="mb-[9px] block text-xs font-semibold text-[#344335]" htmlFor="username">{t("Username")}</label>

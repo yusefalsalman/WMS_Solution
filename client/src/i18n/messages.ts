@@ -1,4 +1,6 @@
 export const ar: Record<string, string> = {
+  "Demo account": "حساب تجريبي",
+  "Explore the demo using these credentials.": "استكشف النسخة التجريبية باستخدام بيانات الدخول التالية.",
   "Overview": "نظرة عامة",
   "Products": "المنتجات",
   "Warehouses": "المستودعات",
