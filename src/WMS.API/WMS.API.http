@@ -1,6 +1,172 @@
-@WMS.API_HostAddress = http://localhost:5081
+# Local development examples. Execute requests individually.
+# Replace placeholders locally; never commit real passwords or bearer tokens.
+# POST/PUT/DELETE examples change the selected database.
+@baseUrl = http://localhost:5081/api
+@username = admin
+@password = REPLACE_WITH_YOUR_LOCAL_PASSWORD
+@token = REPLACE_WITH_TOKEN_FROM_LOGIN
+@productId = 00000000-0000-0000-0000-000000000001
+@warehouseId = 00000000-0000-0000-0000-000000000002
+@destinationWarehouseId = 00000000-0000-0000-0000-000000000003
 
-GET {{WMS.API_HostAddress}}/weatherforecast/
-Accept: application/json
+### Sign in. Copy response.token into @token above.
+POST {{baseUrl}}/auth/login
+Content-Type: application/json
 
-###
+{
+  "username": "{{username}}",
+  "password": "{{password}}"
+}
+
+### Create an employee (Admin only). Use a unique username and local password.
+POST {{baseUrl}}/auth/Register
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "username": "example-clerk",
+  "password": "REPLACE_WITH_A_LOCAL_PASSWORD",
+  "role": "Clerk"
+}
+
+### List active products (all authenticated roles)
+GET {{baseUrl}}/Products?page=1&pageSize=20
+Authorization: Bearer {{token}}
+
+### Get a product
+GET {{baseUrl}}/Products/{{productId}}
+Authorization: Bearer {{token}}
+
+### Create a product (Manager/Admin). Copy response.id into @productId.
+POST {{baseUrl}}/Products
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "sku": "DEMO-PKG-001",
+  "name": "Packing tape",
+  "lowStockThreshold": 10,
+  "unitOfMeasure": "Piece"
+}
+
+### Update product details (Manager/Admin). SKU is immutable.
+PUT {{baseUrl}}/Products/{{productId}}
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "name": "Packing tape - wide",
+  "lowStockThreshold": 15,
+  "unitOfMeasure": "Piece"
+}
+
+### List active warehouses
+GET {{baseUrl}}/Warehouses?page=1&pageSize=20
+Authorization: Bearer {{token}}
+
+### Get a warehouse
+GET {{baseUrl}}/Warehouses/{{warehouseId}}
+Authorization: Bearer {{token}}
+
+### Create a warehouse (Manager/Admin). Copy response.id into @warehouseId.
+# Create another warehouse with a different code for transfer examples.
+POST {{baseUrl}}/Warehouses
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "code": "DEMO-AMM",
+  "name": "Demo warehouse",
+  "location": "Amman"
+}
+
+### Update a warehouse (Manager/Admin)
+PUT {{baseUrl}}/Warehouses/{{warehouseId}}
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "name": "Demo central warehouse",
+  "location": "Amman",
+  "isActive": true
+}
+
+### List inventory; both query filters are optional
+GET {{baseUrl}}/Inventory?productId={{productId}}&warehouseId={{warehouseId}}
+Authorization: Bearer {{token}}
+
+### Receive stock (all authenticated roles)
+POST {{baseUrl}}/Inventory/stock-in
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "productId": "{{productId}}",
+  "warehouseId": "{{warehouseId}}",
+  "quantity": 100,
+  "reason": "Initial demo delivery"
+}
+
+### Issue stock; a quantity exceeding available stock returns 409
+POST {{baseUrl}}/Inventory/stock-out
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "productId": "{{productId}}",
+  "warehouseId": "{{warehouseId}}",
+  "quantity": 5,
+  "reason": "Demo dispatch"
+}
+
+### Adjust the counted balance (Manager/Admin). Reason is required.
+POST {{baseUrl}}/Inventory/adjust
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "productId": "{{productId}}",
+  "warehouseId": "{{warehouseId}}",
+  "newQuantity": 90,
+  "reason": "Physical stock count"
+}
+
+### List transfers
+GET {{baseUrl}}/Transfers
+Authorization: Bearer {{token}}
+
+### Transfer stock; select two existing, distinct, active warehouses
+POST {{baseUrl}}/Transfers
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "productId": "{{productId}}",
+  "fromWarehouseId": "{{warehouseId}}",
+  "toWarehouseId": "{{destinationWarehouseId}}",
+  "quantity": 10
+}
+
+### Warehouse stock summary (Manager/Admin)
+GET {{baseUrl}}/Reports/stock-by-warehouse
+Authorization: Bearer {{token}}
+
+### Current low-stock report; warehouseId is optional (Manager/Admin)
+GET {{baseUrl}}/Reports/low-stock?warehouseId={{warehouseId}}
+Authorization: Bearer {{token}}
+
+### Audit history; every filter is optional, from inclusive / to exclusive
+GET {{baseUrl}}/Reports/audit-log?productId={{productId}}&warehouseId={{warehouseId}}&from=2026-01-01T00:00:00Z&to=2027-01-01T00:00:00Z
+Authorization: Bearer {{token}}
+
+### Saved active alerts; warehouseId is optional (Manager/Admin)
+GET {{baseUrl}}/alerts?warehouseId={{warehouseId}}
+Authorization: Bearer {{token}}
+
+### Soft-delete a product (Manager/Admin). Run after the examples above.
+DELETE {{baseUrl}}/Products/{{productId}}
+Authorization: Bearer {{token}}
+
+### Soft-delete a warehouse (Manager/Admin). Existing history is retained.
+DELETE {{baseUrl}}/Warehouses/{{warehouseId}}
+Authorization: Bearer {{token}}

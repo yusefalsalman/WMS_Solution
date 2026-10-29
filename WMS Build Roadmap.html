@@ -95,11 +95,11 @@ footer{color:var(--muted);font-size:.85rem;text-align:center}
 
 <script>
 const NEXT = {
-  title: "Next: Prepare production deployment on Render and Vercel",
+  title: "Next: Confirm online acceptance and add the live application to your portfolio",
   steps: [
-    "Frontend implementation and website acceptance are complete, based on the user's confirmation. Proceed with production deployment preparation.",
-    "Prepare a .NET 10 Dockerfile and .dockerignore, configurable production CORS, a health endpoint, and an explicit database migration and first-admin provisioning process.",
-    "Deploy the API on Render with runtime environment variables for the Neon connection string and JWT key. Deploy client/ on Vercel with VITE_API_BASE_URL and SPA rewrites, then verify the complete online workflow."
+    "The API is deployed on Render, the frontend is deployed on Vercel, and the existing Neon database is connected. Use https://wms-solution.vercel.app/login; generated Vercel deployment domains are different CORS origins.",
+    "Confirm sign-in and the operational workflows on the stable live domain after the API URL and CORS configuration changes. Allow the free Render service to wake up before retrying a timed-out request.",
+    "The README, screenshot, endpoint examples, and portfolio description are prepared. Add the live link to your personal portfolio/CV and use the README walkthrough to present the project."
   ]
 };
 
@@ -194,7 +194,7 @@ const PHASES = [
    ["done","Install Dapper and reuse the database connection"],
    ["done","Build a stock report per warehouse with aggregates and GROUP BY"],
    ["done","Query products below their low-stock threshold"],
-   ["done","Query the audit log with date and user filters"]
+   ["done","Query the audit log with date, product, and warehouse filters"]
   ]},
  {code:"P09", t:"Authentication and authorization", sub:"JWT and roles",
   learn:"Authentication vs. authorization, password hashing, JWT claims/signing/expiry, and role-based authorization.",
@@ -264,20 +264,21 @@ const PHASES = [
  {code:"P14", t:"Deployment", sub:"Neon, Docker, and backend/frontend hosting",
   learn:"Dockerfiles, production environment variables, server-side migrations, and CORS for the production domain.",
   tasks:[
-   ["todo","Select and verify the Neon production branch; apply migrations and provision the first admin explicitly (the current seeder only runs in Development)"],
-   ["todo","Create a multi-stage .NET 10 Dockerfile and .dockerignore; configure HTTP port binding and a health endpoint"],
-   ["todo","Configure Render runtime secrets: ConnectionStrings__DefaultConnection and Jwt__Key; retain or override non-secret JWT issuer, audience, and expiry settings"],
-   ["todo","Replace localhost-only CORS with configured production frontend origins"],
-   ["todo","Deploy the API to a Render Docker web service using the Neon production database"],
-   ["todo","Deploy client/ to Vercel with VITE_API_BASE_URL pointing to the Render API and SPA route rewrites"],
-   ["todo","Verify the complete system online: login, roles, CRUD, stock movements, transfers, reports, alerts, and route reloads; account for background-job pauses if the Render service sleeps"]
+   ["done","Reuse the existing initialized Neon database and administrator account; the deployed API successfully queried the database. No new production branch was provisioned"],
+   ["done","Create a multi-stage .NET 10 Dockerfile and .dockerignore with configurable HTTP port binding; a dedicated health endpoint remains outside the implemented scope"],
+   ["done","Configure Render runtime secrets: ConnectionStrings__DefaultConnection and Jwt__Key; retain or override non-secret JWT issuer, audience, and expiry settings"],
+   ["done","Replace localhost-only CORS with configured production frontend origins"],
+   ["done","Deploy the API to a Render Docker web service using the Neon production database"],
+   ["done","Deploy client/ to Vercel with VITE_API_BASE_URL pointing to the Render API and SPA route rewrites"],
+   ["doing","Verify the complete system online on the stable Vercel domain after API/CORS configuration: login, roles, CRUD, stock movements, transfers, reports, alerts, and route reloads; account for background-job pauses if the Render service sleeps"]
   ]},
  {code:"P15", t:"Documentation and portfolio", sub:"README, screenshots, and project presentation",
   learn:"Project documentation and explaining the project in interviews.",
   tasks:[
-   ["todo","Write a README covering the idea, technologies, setup instructions, and screenshots"],
-   ["todo","Add a <code>.http</code> file with examples for every endpoint"],
-   ["todo","Add the project to the CV and prepare an interview walkthrough"]
+   ["done","Write the root README with the live link, screenshot, architecture, workflows, permissions, local setup, API reference, testing scope, hosting configuration, and limitations"],
+   ["done","Replace the old WeatherForecast request with local <code>.http</code> examples covering every current endpoint using placeholder credentials and IDs"],
+   ["done","Prepare a portfolio description, stable demo link, and interview walkthrough in the README"],
+   ["todo","Add the prepared demo link to the personal portfolio/CV (to be completed by the project author)"]
   ]}
 ];
 
