@@ -1,0 +1,16 @@
+.git
+.vs
+.vscode
+
+**/bin
+**/obj
+**/TestResults
+
+client
+tests
+
+**/.env
+**/.env.*
+**/secrets.json
+**/*.user
+**/*.log

@@ -97,7 +97,7 @@ footer{color:var(--muted);font-size:.85rem;text-align:center}
 const NEXT = {
   title: "Next: Prepare production deployment on Render and Vercel",
   steps: [
-    "Frontend screens are implemented. Complete browser acceptance checks with real API accounts, including stock movements, transfers, permissions, and mobile layouts.",
+    "Frontend implementation and website acceptance are complete, based on the user's confirmation. Proceed with production deployment preparation.",
     "Prepare a .NET 10 Dockerfile and .dockerignore, configurable production CORS, a health endpoint, and an explicit database migration and first-admin provisioning process.",
     "Deploy the API on Render with runtime environment variables for the Neon connection string and JWT key. Deploy client/ on Vercel with VITE_API_BASE_URL and SPA rewrites, then verify the complete online workflow."
   ]
@@ -248,7 +248,7 @@ const PHASES = [
    ["done","Add a logout button that clears storage, the Axios token, and React session state, triggering the protected-route redirect"],
    ["done","Clear the session on protected API 401 responses without logging out on 403 or invalid login; expire the session with a timer and focus/visibility checks, and clean up interceptors, timers, and listeners"],
    ["done","Pass 8 simulated checks covering protected 401, 403, invalid-login 401, success, expiry timer, focus, visibility, and cleanup; frontend build and lint pass"],
-   ["doing","Browser acceptance: the user confirmed login, reload persistence, and logout. Isolated fixture checks covered invalid login, dashboard loading, product pagination, duplicate-SKU errors, Arabic/English switching, language persistence after reload, translated report filters, and mobile RTL navigation. Comprehensive real-API role, expiry, and mutation checks remain pending"],
+   ["done","Browser acceptance: the user confirmed that all website workflows were tested successfully against the real API. Isolated fixture checks also covered invalid login, dashboard loading, pagination, duplicate-SKU errors, language switching and persistence, report filters, and mobile RTL navigation"],
    ["done","Define request/response types and API functions for products, warehouses, inventory movements, transfers, reports, and active alerts, matching backend routes, pagination, and string enums"],
    ["done","Explain server-side pagination (page/pageSize, replacing the displayed page) and the role of TanStack Table separately from Axios and Tailwind"],
    ["done","Install TanStack Table and build a reusable table component with server-side pagination for product and warehouse lists"],
@@ -259,7 +259,7 @@ const PHASES = [
    ["done","Build the stock transfer list and form with product/source/destination selection and clear validation and API error messages"],
    ["done","Replace the temporary home screen with a dashboard, warehouse stock summaries, low-stock reports, active alerts, and audit-log filters; restrict report/alert requests to Manager/Admin"],
    ["done","Verify Arabic/English switching, persistent language selection, translated product units without changing API enum values, report filters, and mobile RTL navigation using isolated fixture data"],
-   ["doing","Complete browser acceptance against the real API: loading/error/empty states, role restrictions, stock and transfer forms, expiry, and refreshed data after successful operations"]
+   ["done","Complete website acceptance against the real API; the user confirmed successful testing of all website workflows on October 29, 2026"]
   ]},
  {code:"P14", t:"Deployment", sub:"Neon, Docker, and backend/frontend hosting",
   learn:"Dockerfiles, production environment variables, server-side migrations, and CORS for the production domain.",
