@@ -1,7 +1,8 @@
+@import url("https://fonts.googleapis.com/css2?family=Noto+Sans+Arabic:wght@400;500;600;700&display=swap");
 @import "tailwindcss";
 
 @theme {
-  --font-sans: "Segoe UI", Inter, -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-sans: "Noto Sans Arabic", "Segoe UI", sans-serif;
   --color-ink: #23382d;
   --color-muted: #72796c;
   --color-accent: #efad5c;
@@ -30,3 +31,11 @@
   button:disabled { @apply cursor-wait; }
   ::selection { @apply bg-[#f4c58a] text-[#172b21]; }
 }
+
+/* Arabic uses connected letterforms: these overrides follow the utility layer. */
+
+  html[dir="rtl"] { letter-spacing: normal; }
+  html[dir="rtl"] .font-mono { font-family: var(--font-sans); letter-spacing: normal; }
+  html[dir="rtl"] :is(h1, h2, h3, p, label, th, button, span) { letter-spacing: normal; }
+  html[dir="rtl"] :is(h1, h2) { line-height: 1.5; }
+  :is(input[type="number"], input[name="sku"], input[name="code"], input[name="username"], input[name="password"]) { direction: ltr; text-align: start; }

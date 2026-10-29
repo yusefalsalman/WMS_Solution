@@ -1,32 +1,39 @@
+import { t, useLanguage } from '../i18n/language'
+import { useCallback } from 'react'
+import { Link } from 'react-router'
+import { ArrowDownLeft, ArrowRight, ArrowRightLeft, Bell, Box, Boxes, Warehouse } from 'lucide-react'
 import { useAuth } from '../hooks/useAuth'
+import { useAsync } from '../hooks/useAsync'
+import { getProducts } from '../services/productService'
+import { getWarehouses } from '../services/warehouseService'
+import { getInventory } from '../services/inventoryService'
+import { getTransfers } from '../services/transferService'
+import { getStockByWarehouse } from '../services/reportService'
+import { getActiveAlerts } from '../services/alertService'
+import { number } from '../lib/format'
+import { Badge, Button, Empty, LoadError, Loading, Metric, PageHeading } from '../components/ui/Ui'
 
 export function HomePage() {
-  const { session, signOut } = useAuth()
-
-  return (
-    <main className="min-h-svh px-6 py-8 sm:px-12">
-      <header className="mx-auto flex max-w-5xl flex-wrap items-center justify-between gap-4 border-b border-border pb-6">
-        <span className="text-lg font-semibold tracking-tight">WMS / Workspace</span>
-        <button
-          type="button"
-          onClick={signOut}
-          className="rounded-lg bg-ink px-5 py-2.5 text-sm font-semibold text-white motion-safe:transition-colors hover:bg-[#355440] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-ink"
-        >
-          Sign out
-        </button>
-      </header>
-
-      <section className="mx-auto max-w-5xl py-16 sm:py-24">
-        <p className="mb-4 text-xs font-semibold uppercase tracking-[0.2em] text-muted">
-          Warehouse management
-        </p>
-        <h1 className="text-4xl font-semibold tracking-tight sm:text-5xl">
-          Welcome, {session?.username}
-        </h1>
-        <p className="mt-5 max-w-lg leading-relaxed text-muted">
-          Your workspace is ready. The warehouse dashboard will be added here next.
-        </p>
-      </section>
-    </main>
-  )
+  useLanguage()
+  const { session } = useAuth()
+  const manager = session?.role === 'Admin' || session?.role === 'Manager'
+  const load = useCallback(async () => {
+    const [products, warehouses, inventory, transfers, summaries, alerts] = await Promise.all([
+      getProducts(1, 1), getWarehouses(1, 1), getInventory(), getTransfers(),
+      manager ? getStockByWarehouse() : Promise.resolve([]),
+      manager ? getActiveAlerts() : Promise.resolve([]),
+    ])
+    return { products, warehouses, inventory, transfers, summaries, alerts }
+  }, [manager])
+  const query = useAsync(load)
+  const data = query.data
+  return <><PageHeading eyebrow={t("Your daily overview")} title={`${t("Welcome back,")} ${session?.username}.`} description={t("A little clarity for the day ahead. Here is where your warehouse operations stand.")}><Button variant="secondary" onClick={query.refresh} disabled={query.loading}>{t("Refresh overview")}</Button></PageHeading>
+    <div className="relative mb-7 overflow-hidden rounded-2xl bg-[#294732] px-6 py-7 text-white sm:px-8"><div className="relative z-1 flex flex-wrap items-center justify-between gap-5"><div><span className="font-mono text-[9px] tracking-[0.2em] text-[#b4c3a4] uppercase">{t("Keep things moving")}</span><h2 className="mt-3 text-2xl font-medium tracking-tight">{t("Good operations start with a clear view.")}</h2><p className="mt-2 max-w-xl text-sm leading-relaxed text-[#c0cfb5]">{t("From the first delivery to the next transfer, every movement has its place.")}</p></div><Link to="/inventory" className="inline-flex items-center gap-3 rounded-lg bg-[#edc18a] px-5 py-3 text-xs font-semibold text-[#294732] hover:bg-[#f4d5ad]">{t("Open inventory")}<ArrowRight size={16} className="rtl:rotate-180" /></Link></div><Boxes className="pointer-events-none absolute -end-8 -bottom-12 text-[#88a776]/10" size={240} strokeWidth={0.7} /></div>
+    {query.loading ? <Loading label={t("Preparing your overview…")} /> : query.error ? <LoadError message={query.error} retry={query.refresh} /> : data && <>
+      <div className="mb-8 grid gap-4 sm:grid-cols-2 xl:grid-cols-4"><Metric label={t("Active products")} value={number(data.products.totalCount)} note="Your current catalog" icon={<Box size={19} />} to="/products" /><Metric label={t("Warehouses")} value={number(data.warehouses.totalCount)} note="Active storage locations" icon={<Warehouse size={19} />} to="/warehouses" /><Metric label={t("Inventory positions")} value={number(data.inventory.length)} note="Product and warehouse balances" icon={<Boxes size={19} />} to="/inventory" />{manager ? <Metric label={t("Active stock alerts")} value={number(data.alerts.length)} note="Items that need a closer look" icon={<Bell size={19} />} to="/alerts" /> : <Metric label={t("Stock transfers")} value={number(data.transfers.length)} note="Recorded across your network" icon={<ArrowRightLeft size={19} />} to="/transfers" />}</div>
+      <div className="grid items-start gap-6 xl:grid-cols-[1.2fr_1fr]"><section className="rounded-xl border border-border bg-white"><div className="flex items-center justify-between gap-4 border-b border-border px-6 py-5"><div><h2 className="text-sm font-semibold">{manager ? t("Across your warehouses") : t("Stock at a glance")}</h2><p className="mt-1 text-xs text-muted">{manager ? t("Product positions by active location") : t("A snapshot of current balances")}</p></div><Link className="text-xs font-medium text-[#58734a] hover:underline" to={manager ? '/reports' : '/inventory'}>{t("View all")}</Link></div>{manager ? data.summaries.length ? <div className="space-y-6 p-6">{data.summaries.slice(0, 6).map(summary => <div key={summary.warehouseCode}><div className="mb-2 flex items-center justify-between gap-4"><div><span className="text-xs font-medium">{summary.warehouseName}</span><span className="ms-2 font-mono text-[9px] text-muted">{summary.warehouseCode}</span></div><span className="text-xs tabular-nums text-muted">{number(summary.productCount)}  {t("products")}</span></div><div className="h-2 overflow-hidden rounded-full bg-surface"><div className="h-full rounded-full bg-[#9bac82]" style={{ width: `${summary.productCount / Math.max(1, ...data.summaries.map(s => s.productCount)) * 100}%` }} /></div></div>)}</div> : <Empty title={t("No warehouses yet")} description={t("Add a warehouse to see your network take shape.")} /> : data.inventory.length ? <div className="divide-y divide-border/70">{data.inventory.slice(0, 6).map(item => <div key={item.id} className="flex items-center justify-between gap-4 px-6 py-4"><div><p className="text-sm font-medium">{item.productName}</p><p className="mt-1 text-xs text-muted">{item.warehouseCode}</p></div><span className="text-sm tabular-nums">{number(item.quantity)}</span></div>)}</div> : <Empty title={t("Ready for your first delivery")} description={t("Receive stock to start tracking warehouse balances.")} />}</section>
+      <section className="rounded-xl border border-border bg-white"><div className="flex items-center justify-between gap-4 border-b border-border px-6 py-5"><div><h2 className="text-sm font-semibold">{manager ? t("Needs your attention") : t("Your next move")}</h2><p className="mt-1 text-xs text-muted">{manager ? t("Active low-stock alerts") : t("Tools for the daily routine")}</p></div>{manager && <Badge tone={data.alerts.length ? 'amber' : 'green'}>{data.alerts.length ? `${data.alerts.length} ${t("active")}` : t("All clear")}</Badge>}</div>{manager ? data.alerts.length ? <div className="divide-y divide-border/70">{data.alerts.slice(0, 5).map(alert => <div key={alert.id} className="flex items-start gap-3 px-6 py-4"><span className="mt-0.5 rounded-lg bg-[#fff0d8] p-2 text-[#a77d3a]"><Bell size={15} /></span><div className="min-w-0 flex-1"><p className="text-sm font-medium">{alert.productName}</p><p className="mt-1 text-xs text-muted">{alert.warehouseCode} · {number(alert.currentQuantity)}  {t("on hand /")} {number(alert.thresholdAtDetection)}  {t("threshold")}</p></div></div>)}<Link to="/alerts" className="flex items-center justify-between px-6 py-4 text-xs font-medium text-[#58734a]">{t("Review all alerts")}<ArrowRight size={15} className="rtl:rotate-180" /></Link></div> : <Empty title={t("Nothing needs attention")} description={t("No active low-stock alerts. Alerts are checked periodically in the background.")} /> : <div className="space-y-3 p-5">{[{ to: '/inventory', title: 'Receive or issue stock', text: 'Keep warehouse balances up to date.', icon: ArrowDownLeft }, { to: '/transfers', title: 'Move between warehouses', text: 'Put the right products in the right place.', icon: ArrowRightLeft }, { to: '/products', title: 'Browse the catalog', text: 'Find product units and stock thresholds.', icon: Box }].map(({ to, title, text, icon: Icon }) => <Link key={to} to={to} className="flex items-center gap-4 rounded-lg border border-border p-4 hover:bg-surface"><Icon className="text-[#718267]" size={20} /><div className="flex-1"><p className="text-xs font-semibold">{t(title)}</p><p className="mt-1 text-[11px] text-muted">{t(text)}</p></div><ArrowRight size={15} className="text-muted" /></Link>)}</div>}</section></div>
+      <div className="mt-6 flex flex-wrap items-center justify-between gap-3 rounded-xl border border-border bg-[#eeefe5] px-6 py-4"><span className="text-xs text-muted"><strong className="text-ink">{number(data.transfers.filter(transfer => transfer.status === 'Completed').length)}  {t("completed transfers")}</strong>  {t("recorded across your warehouse network.")}</span><Link to="/transfers" className="inline-flex items-center gap-2 text-xs font-medium">{t("Explore transfers")}<ArrowRight size={14} className="rtl:rotate-180" /></Link></div>
+    </>}
+  </>
 }

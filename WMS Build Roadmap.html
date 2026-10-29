@@ -90,16 +90,16 @@ footer{color:var(--muted);font-size:.85rem;text-align:center}
 
   <div class="phases" id="phases"></div>
 
-  <footer>Last updated: October 27, 2026</footer>
+  <footer>Last updated: October 29, 2026</footer>
 </div>
 
 <script>
 const NEXT = {
-  title: "Next: Install TanStack Table and build the product screen",
+  title: "Next: Prepare production deployment on Render and Vercel",
   steps: [
-    "Pagination and TanStack Table have been explained. Install @tanstack/react-table, then build the shared application layout and table component.",
-    "Connect the product page to getProducts(page, pageSize) with server-side pagination, loading/error/empty states, and product forms restricted to Manager/Admin. Keep filtering and sorting within the scope supported by the API.",
-    "Use the product screen to verify an authenticated API request in the browser; finish invalid-login and expiry checks. Session expiry and 401/403 handling have passed simulated checks."
+    "Frontend screens are implemented. Complete browser acceptance checks with real API accounts, including stock movements, transfers, permissions, and mobile layouts.",
+    "Prepare a .NET 10 Dockerfile and .dockerignore, configurable production CORS, a health endpoint, and an explicit database migration and first-admin provisioning process.",
+    "Deploy the API on Render with runtime environment variables for the Neon connection string and JWT key. Deploy client/ on Vercel with VITE_API_BASE_URL and SPA rewrites, then verify the complete online workflow."
   ]
 };
 
@@ -234,6 +234,7 @@ const PHASES = [
  {code:"P13", t:"Frontend screens", sub:"Login, tables, transfers, and reports",
   learn:"For each screen, define types matching the backend DTOs and API functions, then build the UI. Topics include forms, AuthContext, AuthProvider, state management, data fetching, error handling, and TanStack Table pagination/filtering/sorting.",
   tasks:[
+   ["done","Add Arabic/English switching with a persistent language preference, RTL layouts, translated interface text, locale-aware dates/numbers, and a shared Noto Sans Arabic font"],
    ["done","Define login types: LoginRequest, LoginResponse, and UserRole"],
    ["done","Implement the login function calling POST /api/auth/login"],
    ["done","Implement AuthContext and AuthProvider for session state, sign-in, and sign-out, and wrap the app in the provider"],
@@ -241,32 +242,35 @@ const PHASES = [
    ["done","Connect the login form to signIn with loading feedback, duplicate-submit prevention, and error messages"],
    ["done","Design the login screen with a warehouse identity and shared colors, and review desktop and mobile layouts"],
    ["done","Use Tailwind utilities for login and home styling; retain one global stylesheet for theme tokens, base styles, and a custom animation; remove unused template assets"],
-   ["done","Display Login at /login and redirect unknown routes to the protected home route"],
-   ["done","Navigate to a temporary home screen after login and redirect signed-in users away from /login"],
+   ["done","Display Login at /login and show a not-found screen for unknown protected routes"],
+   ["done","Navigate to the dashboard after login and redirect signed-in users away from /login"],
    ["done","Persist the session in sessionStorage, restore session state and the Axios token after reload, and reject malformed or expired stored sessions"],
    ["done","Add a logout button that clears storage, the Axios token, and React session state, triggering the protected-route redirect"],
    ["done","Clear the session on protected API 401 responses without logging out on 403 or invalid login; expire the session with a timer and focus/visibility checks, and clean up interceptors, timers, and listeners"],
    ["done","Pass 8 simulated checks covering protected 401, 403, invalid-login 401, success, expiry timer, focus, visibility, and cleanup; frontend build and lint pass"],
-   ["doing","Browser verification: successful login, reload persistence, and logout confirmed by the user; invalid login, expiry, and authenticated API requests still pending (simulated checks are complete)"],
+   ["doing","Browser acceptance: the user confirmed login, reload persistence, and logout. Isolated fixture checks covered invalid login, dashboard loading, product pagination, duplicate-SKU errors, Arabic/English switching, language persistence after reload, translated report filters, and mobile RTL navigation. Comprehensive real-API role, expiry, and mutation checks remain pending"],
    ["done","Define request/response types and API functions for products, warehouses, inventory movements, transfers, reports, and active alerts, matching backend routes, pagination, and string enums"],
    ["done","Explain server-side pagination (page/pageSize, replacing the displayed page) and the role of TanStack Table separately from Axios and Tailwind"],
-   ["todo","Install TanStack Table and build a reusable table component with server-side pagination for product and warehouse lists"],
-   ["todo","Build a responsive shared layout with navigation, user details, logout, and role-aware links and actions"],
-   ["todo","Build the product screen: paginated list, create/edit forms, and delete confirmation; restrict write actions to Manager/Admin"],
-   ["todo","Build the warehouse screen: paginated list, create/edit forms, active status, and delete confirmation; restrict write actions to Manager/Admin"],
-   ["todo","Build the inventory screen with warehouse/product filters, stock-in and stock-out forms, and Manager/Admin stock adjustment"],
-   ["todo","Build the stock transfer list and form with product/source/destination selection and clear validation and API error messages"],
-   ["todo","Replace the temporary home screen with a dashboard, warehouse stock summaries, low-stock reports, active alerts, and audit-log filters; restrict report/alert requests to Manager/Admin"],
-   ["todo","Verify frontend screens in the browser: loading/error/empty states, pagination, role restrictions, forms, and refreshed data after successful operations"]
+   ["done","Install TanStack Table and build a reusable table component with server-side pagination for product and warehouse lists"],
+   ["done","Build a responsive shared layout with navigation, user details, logout, and role-aware links and actions"],
+   ["done","Build the product screen: paginated list, create/edit forms, and delete confirmation; restrict write actions to Manager/Admin"],
+   ["done","Build the warehouse screen: paginated list, create/edit forms, active status, and delete confirmation; restrict write actions to Manager/Admin"],
+   ["done","Build the inventory screen with warehouse/product filters, stock-in and stock-out forms, and Manager/Admin stock adjustment"],
+   ["done","Build the stock transfer list and form with product/source/destination selection and clear validation and API error messages"],
+   ["done","Replace the temporary home screen with a dashboard, warehouse stock summaries, low-stock reports, active alerts, and audit-log filters; restrict report/alert requests to Manager/Admin"],
+   ["done","Verify Arabic/English switching, persistent language selection, translated product units without changing API enum values, report filters, and mobile RTL navigation using isolated fixture data"],
+   ["doing","Complete browser acceptance against the real API: loading/error/empty states, role restrictions, stock and transfer forms, expiry, and refreshed data after successful operations"]
   ]},
  {code:"P14", t:"Deployment", sub:"Neon, Docker, and backend/frontend hosting",
   learn:"Dockerfiles, production environment variables, server-side migrations, and CORS for the production domain.",
   tasks:[
-   ["todo","Set up the database on Neon"],
-   ["todo","Create a Dockerfile for the API"],
-   ["todo","Deploy the API to Render, Railway, or Azure"],
-   ["todo","Deploy the frontend to Vercel or Netlify"],
-   ["todo","Verify the complete system online"]
+   ["todo","Select and verify the Neon production branch; apply migrations and provision the first admin explicitly (the current seeder only runs in Development)"],
+   ["todo","Create a multi-stage .NET 10 Dockerfile and .dockerignore; configure HTTP port binding and a health endpoint"],
+   ["todo","Configure Render runtime secrets: ConnectionStrings__DefaultConnection and Jwt__Key; retain or override non-secret JWT issuer, audience, and expiry settings"],
+   ["todo","Replace localhost-only CORS with configured production frontend origins"],
+   ["todo","Deploy the API to a Render Docker web service using the Neon production database"],
+   ["todo","Deploy client/ to Vercel with VITE_API_BASE_URL pointing to the Render API and SPA route rewrites"],
+   ["todo","Verify the complete system online: login, roles, CRUD, stock movements, transfers, reports, alerts, and route reloads; account for background-job pauses if the Render service sleeps"]
   ]},
  {code:"P15", t:"Documentation and portfolio", sub:"README, screenshots, and project presentation",
   learn:"Project documentation and explaining the project in interviews.",
