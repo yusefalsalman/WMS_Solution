@@ -76,8 +76,8 @@ footer{color:var(--muted);font-size:.85rem;text-align:center}
     <div class="bar"><i id="meterBar" style="width:0"></i></div>
   </section>
 
-  <section class="ticket" aria-label="Next step">
-    <span class="lbl">Next step</span>
+  <section class="ticket" aria-label="Project status">
+    <span class="lbl">Project status</span>
     <h2 id="nextTitle"></h2>
     <ol id="nextList"></ol>
   </section>
@@ -95,11 +95,10 @@ footer{color:var(--muted);font-size:.85rem;text-align:center}
 
 <script>
 const NEXT = {
-  title: "Next: Confirm online acceptance and add the live application to your portfolio",
+  title: "Roadmap complete",
   steps: [
-    "The API is deployed on Render, the frontend is deployed on Vercel, and the existing Neon database is connected. Use https://wms-solution.vercel.app/login; generated Vercel deployment domains are different CORS origins.",
-    "Confirm sign-in and the operational workflows on the stable live domain after the API URL and CORS configuration changes. Allow the free Render service to wake up before retrying a timed-out request.",
-    "The README, screenshot, endpoint examples, CV description, portfolio card description, and technology tags are prepared. Publishing the live link on the personal portfolio/CV is owned by the project author."
+    "The hosted application and its operational workflows have been verified.",
+    "The live demo link has been added to the portfolio/CV."
   ]
 };
 
@@ -270,7 +269,7 @@ const PHASES = [
    ["done","Replace localhost-only CORS with configured production frontend origins"],
    ["done","Deploy the API to a Render Docker web service using the Neon production database"],
    ["done","Deploy client/ to Vercel with VITE_API_BASE_URL pointing to the Render API and SPA route rewrites"],
-   ["doing","Verify the complete system online on the stable Vercel domain after API/CORS configuration: login, roles, CRUD, stock movements, transfers, reports, alerts, and route reloads; account for background-job pauses if the Render service sleeps"]
+   ["done","Verify the complete system online on the stable Vercel domain after API/CORS configuration: login, roles, CRUD, stock movements, transfers, reports, alerts, and route reloads; account for background-job pauses if the Render service sleeps"]
   ]},
  {code:"P15", t:"Documentation and portfolio", sub:"README, screenshots, and project presentation",
   learn:"Project documentation and explaining the project in interviews.",
@@ -279,7 +278,7 @@ const PHASES = [
    ["done","Replace the old WeatherForecast request with local <code>.http</code> examples covering every current endpoint using placeholder credentials and IDs"],
    ["done","Prepare a portfolio description, stable demo link, and interview walkthrough in the README"],
    ["done","Prepare an English CV description, portfolio card description, and technology tags for the project author"],
-   ["todo","Add the prepared demo link to the personal portfolio/CV (to be completed by the project author)"]
+   ["done","Add the prepared demo link to the personal portfolio/CV"]
   ]}
 ];
 
