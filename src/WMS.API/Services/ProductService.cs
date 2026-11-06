@@ -65,7 +65,7 @@ public class ProductService : IProductService
     {
         var product = await _dbContext.Products.FindAsync(productId);
 
-        if (product == null)
+        if (product == null || !product.IsActive)
         {
             return null;
         }
