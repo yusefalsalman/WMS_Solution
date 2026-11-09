@@ -14,7 +14,6 @@ public class AppDbContext : DbContext
     public DbSet<StockTransfer> StockTransfers { get; set; } = null!;
     public DbSet<LowStockAlert> LowStockAlerts { get; set; } = null!;
 
-
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(AppDbContext).Assembly);

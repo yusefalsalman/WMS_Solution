@@ -13,8 +13,6 @@ public class InventoryItem : BaseEntity
     public Product Product { get; set; } = null!;
     public Warehouse Warehouse { get; set; } = null!;
 
-
-
     public void AddStock(decimal quantity)
     {
         if (quantity <= 0)
@@ -49,5 +47,4 @@ public class InventoryItem : BaseEntity
         Quantity = newQuantity;
         UpdatedAt = DateTime.UtcNow;
     }
-
 }
