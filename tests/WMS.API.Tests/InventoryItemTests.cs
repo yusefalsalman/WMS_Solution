@@ -21,7 +21,6 @@ public class InventoryItemTests
     public void AddStock_NonPositiveQuantity_ThrowsArgumentException(decimal quantity)
     {
         var item = new InventoryItem();
-
         Assert.Throws<ArgumentException>(() => item.AddStock(quantity));
     }
 
@@ -31,7 +30,6 @@ public class InventoryItemTests
         var item = new InventoryItem();
         item.AddStock(3);
 
-        Assert.Throws<InsufficientStockException>(() =>
-            item.RemoveStock(4));
+        Assert.Throws<InsufficientStockException>(() => item.RemoveStock(4));
     }
 }
