@@ -59,8 +59,7 @@ builder.Services.AddProblemDetails();
 builder.Services.AddHostedService<LowStockAlertBackgroundService>();
 
 // Auth Service
-builder.Services
-    .AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
     {
         options.MapInboundClaims = false;
         options.TokenValidationParameters = new TokenValidationParameters
